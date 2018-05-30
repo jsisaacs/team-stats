@@ -11,34 +11,41 @@ class InputForm extends React.Component {
     };
   }
 
-  isValidSummonerName = name => {
-    //TODO
-  };
-
   handleChange = event => {
     this.setState({
-      value: event.target.value
+      value: event.target.value,
+      team: []
     });
   };
+
 
   handleSubmit = event => {
     event.preventDefault();
     const text = this.state.value;
-    let textArray = text.split(",");
-    //remove whitespace
-    textArray = textArray.map(item => (item = item.replace(/\s+/g, "")));
+    let splitText = text.split(' joined the lobby');
+    splitText.pop();
 
-    //check if each username is valid
-    //TODO
-    for (let i = 0; i < textArray.length; i++) {
-      fetch(`http://localhost:12344/summoner/${textArray[i]}`)
+    // const team = [... this.state.team];
+    // splitText.map(summoner => {
+    //   if (this.isValidSummonerName() === true) {
+    //     team.push(da)
+    //   }
+    // });
+
+    //add all summoners to the team
+    for (let i = 0; i < splitText.length; i++) {
+      fetch(`http://localhost:12344/summoner/${splitText[i]}`)
         .then(res => res.json())
         .then(data => {
           const team = [...this.state.team];
+          if (data === undefined) {
+            console.log("Doesnt exist")
+          }
           team.push(data);
           this.setState({
             team
           });
+          console.log(team)
         });
     }
   };
