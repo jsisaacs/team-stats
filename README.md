@@ -2,6 +2,7 @@
 
 ## TODO
 ### Backend
+- [ ] set up [request-promise](https://github.com/request/request-promise)
 #### Endpoints
 - [ ] summoner-stats
     - [ ] summoner name
