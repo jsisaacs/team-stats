@@ -30,64 +30,57 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
     summoner/v3/summoners/by-name/{summonerName}
   */
 
- const summonerRequestOptions = {
-  uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
-  qs: {
-    api_key: 'RGAPI-4de9efd3-9817-4c88-8788-8084c88173c8'
-  },
-  headers: {
-    'User-Agent': 'Request-Promise'
-  },
-  json: true
-}
+  const summonerRequestOptions = {
+    uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
+    qs: {
+      api_key: 'RGAPI-4de9efd3-9817-4c88-8788-8084c88173c8'
+    },
+    headers: {
+      'User-Agent': 'Request-Promise'
+    },
+    json: true
+  }
 
-/*
-  league/v3/positions/by-summoner/{summonerId}
-*/
+  /*
+    league/v3/positions/by-summoner/{summonerId}
+  */
 
-const leagueRequestOptions = {
-  uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${summonerStats.id}`,
-  qs: {
-    api_key: 'RGAPI-4de9efd3-9817-4c88-8788-8084c88173c8'
-  },
-  headers: {
-    'User-Agent': 'Request-Promise'
-  },
-  json: true
-}
+  const leagueRequestOptions = {
+    uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${summonerStats.id}`,
+    qs: {
+      api_key: 'RGAPI-4de9efd3-9817-4c88-8788-8084c88173c8'
+    },
+    headers: {
+      'User-Agent': 'Request-Promise'
+    },
+    json: true
+  }
 
-let summmonerRequest = function () {
-  let summonerRequestPromise = new Promise (
-    function request() {
-      requestPromise(summonerRequestOptions)
-      .then(function (summonerRes) {
-        summonerStats.name = summonerRes.name;
-        summonerStats.id = summonerRes.id;
-        res.json(summonerStats)
-      })
-      .catch(function (error) {
-        console.log("Error making request to Summoner-V3.");
-      })
-    }
-  );
-}
+  requestPromise(summonerRequestOptions)
+    .then(response => {
+      summonerStats.name = response.name;
+      summonerStats.id = response.id;
+      
+      //TEST
+      res.json(summonerStats);
 
-let leagueRequest = function () {
-  let leagueRequestPromise = new Promise (
-    function request() {
-      requestPromise(leagueRequestOptions)
-      .then(function (leagueRes) {
-        res.send("SUCCESS")
-      })
-      .catch(function (error) {
-        console.log("Error making request to League-V3.");
-      })
-    }
-  );
-}
-
-summmonerRequest()
-  .then(leagueRequest());
+      if (summonerStats.id !== undefined) {
+        // requestPromise(leagueRequestOptions)
+        //   .then(response => {
+        //     console.log("League-V3 reached")
+        //     res.send(response);
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   });
+      } else {
+        console.log("Can't call League-V3 because error making request to Summoner-V3.");
+      }
+  })
+  .catch(error => {
+    console.log("Error making request to Summoner-V3.");
+  });
+});
 
 app.listen(port, () => {
   console.log("running at http://localhost:" + port);
