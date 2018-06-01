@@ -62,23 +62,29 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
     .then(response => {
       summonerStats.name = response.name;
       summonerStats.id = response.id;
-      console.log(summonerStats)
       rp(leagueRequestOptions(summonerStats.id))
         .then(response => {
-
-          summonerStats.tier = response[0].tier
-          summonerStats.rank = response[0].rank
-          summonerStats.leaguePoints = response[0].leaguePoints
-          summonerStats.hotStreak = response[0].hotStreak
-          res.json(summonerStats)
+          summonerStats.tier = response[0].tier;
+          summonerStats.rank = response[0].rank;
+          summonerStats.leaguePoints = response[0].leaguePoints;
+          summonerStats.hotStreak = response[0].hotStreak;
+          res.json(summonerStats);
         })
-        .catch(e => console.log('GG'))
+        .catch(error => console.log(error.statusCode))
     })
     .catch(error => {
-      console.log('WP')
+      console.log(error.statusCode)
     });
+});
+
+/*
+  Endpoint about a summoner's current champion
+*/
+
+app.get("/current-champion/:summonerName", (req, res) => {
 
 });
+
 
 app.listen(port, () => {
   console.log("running at http://localhost:" + port);
