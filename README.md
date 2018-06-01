@@ -5,11 +5,11 @@
 - [x] set up [request-promise](https://github.com/request/request-promise)
 #### Endpoints
 - [ ] summoner-stats
-    - [ ] summoner name
-    - [ ] summoner id
-    - [ ] rank
-    - [ ] division
-    - [ ] win rate (last 20 games?)
+    - [x] summoner name
+    - [x] summoner id
+    - [x] rank
+    - [x] division
+    - [ ] win rate
     - [ ] streak
         - [ ] hot, cold, none (maybe more kinds)
 - [ ] summoner-score
