@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dev": "concurrently --kill-others-on-fail \"nodemon server.js\" \"yarn start\"",
+    "dev": "concurrently --kill-others \"nodemon server.js\" \"yarn start\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
