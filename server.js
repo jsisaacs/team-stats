@@ -19,6 +19,7 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
   const summonerStats = {
     name: undefined,
     id: undefined,
+    accountId: undefined,
     tier: undefined,
     rank: undefined,
     leaguePoints: undefined,
@@ -29,11 +30,11 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
   /*
     summoner/v3/summoners/by-name/{summonerName}
   */
-
+ 
   const summonerRequestOptions = {
     uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
     qs: {
-      api_key: 'RGAPI-f7a35839-2c3d-4b01-9e00-05560d63edd4'
+      api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
     },
     headers: {
       'User-Agent': 'Request-Promise'
@@ -45,48 +46,139 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
     league/v3/positions/by-summoner/{summonerId}
   */
 
-  const leagueRequestOptions = (id) => (
-    {
+  const leagueRequest = (id) => (
+    leagueRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${id}`,
-      qs: {
-        api_key: 'RGAPI-f7a35839-2c3d-4b01-9e00-05560d63edd4'
-      },
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
+        qs: {
+          api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+        },
+        headers: {
+          'User-Agent': 'Request-Promise'
+        },
+        json: true
     }
-  )
+  );
 
   rp(summonerRequestOptions)
     .then(response => {
-      summonerStats.name = response.name
-      summonerStats.id = response.id
-      rp(leagueRequestOptions(summonerStats.id))
+      summonerStats.name = response.name;
+      summonerStats.id = response.id;
+      summonerStats.accountId = response.accountId;
+      rp(leagueRequest(summonerStats.id))
         .then(response => {
           //Get the solo Queue info
-          const soloQueue = response.filter(league => league.queueType === 'RANKED_SOLO_5x5')[0]
+          const soloQueue = response.filter(league => league.queueType === 'RANKED_SOLO_5x5')[0];
 
-          summonerStats.tier = soloQueue.tier
-          summonerStats.rank = soloQueue.rank
-          summonerStats.leaguePoints = soloQueue.leaguePoints
-          summonerStats.hotStreak = soloQueue.hotStreak
-          res.json(summonerStats)
+          summonerStats.tier = soloQueue.tier;
+          summonerStats.rank = soloQueue.rank;
+          summonerStats.leaguePoints = soloQueue.leaguePoints;
+          summonerStats.hotStreak = soloQueue.hotStreak;
+          res.json(summonerStats);
         })
-        .catch(error => console.log(error.statusCode))
+        .catch(error => {
+          console.log(error.statusCode);
+          console.log("Error accessing League-v3");
+        })
     })
-    .catch(error => { console.log(error.statusCode) })
-})
+    .catch(error => {
+      console.log(error.statusCode);
+      console.log("Error accessing Summoner-v3");
+    });
+});
 
 /*
   Endpoint about a summoner's current champion
 */
 
 app.get("/current-champion/:summonerName", (req, res) => {
+  const currentChampion = {
+    name: undefined,
+  }
 
-})
+  /*
+    summoner/v3/summoners/by-name/{summonerName}
+  */
+ 
+  const summonerRequestOptions = {
+    uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
+    qs: {
+      api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+    },
+    headers: {
+      'User-Agent': 'Request-Promise'
+    },
+    json: true
+  }
+
+  /*
+    summoner/v3/match/matchlists/by-account/{accountId}
+  */
+
+  const matchRequest = (accountId) => (
+    matchRequestOptions = {
+      uri: `https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/${accountId}`,
+      qs: {
+        api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+      },
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
+    }
+  );
+
+  /*
+    static-data/v3/champions/{id}
+  */
+
+  const championsRequest = (id) => (
+    championsRequestOptions = {
+      uri: `https://na1.api.riotgames.com/lol/static-data/v3/champions/${id}`,
+      qs: {
+        api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5',
+      },
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
+    }
+  );
+
+  rp(summonerRequestOptions)
+    .then(response => {
+      const accountId = response.accountId;
+
+      rp(matchRequest(accountId))
+        .then(response => {
+          const matches = response.matches;
+          const latestMatch = matches[0];
+          const championId = latestMatch.champion;
+
+          rp(championsRequest(championId))
+            .then(response => {
+              currentChampion.name = response.name;
+              res.json(currentChampion)
+            })
+            .catch(error => {
+
+            });
+        })
+        .catch(error => {
+
+        });
+    })
+    .catch(error => {
+      console.log(error.statusCode);
+      console.log("Error accessing Summoner-v3");
+    });
+});
+
+app.get("/match-aggregations/:summonerName", (req, res) => {
+
+});
+
 
 
 app.listen(port, () => {
   console.log("running at http://localhost:" + port)
-})
+});
