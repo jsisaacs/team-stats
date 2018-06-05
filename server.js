@@ -9,6 +9,8 @@ const publicPath = path.join(__dirname, ".", "public")
 const app = express()
 app.use(cors())
 
+var apiKey = 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5';
+
 /*
   Endpoint to recieve basic statistics about a summoner.
 */
@@ -34,7 +36,7 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
   const summonerRequestOptions = {
     uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
     qs: {
-      api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+      api_key: apiKey
     },
     headers: {
       'User-Agent': 'Request-Promise'
@@ -50,7 +52,7 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
     leagueRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${id}`,
         qs: {
-          api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+          api_key: apiKey
         },
         headers: {
           'User-Agent': 'Request-Promise'
@@ -87,12 +89,70 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
 });
 
 /*
-  Endpoint about a summoner's current champion
+  Current match data for a given summoner
 */
 
-app.get("/current-champion/:summonerName", (req, res) => {
-  const currentChampion = {
-    name: undefined,
+app.get("/current-match/:summonerName", (req, res) => {
+
+  /*
+    summoner-stats/{summonerName}
+  */
+
+  const summonerStatsRequest = (summonerName) => (
+    summonerStatsRequestOptions = {
+      uri: `http://localhost:12344/summoner-stats/${summonerName}`,
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
+    }
+  );
+  
+  /*
+    spectator/v3/active-games/by-summoner/{summonerId}
+  */
+
+  const spectatorRequest = (summonerId) => (
+    spectatorRequestOptions = {
+      uri: `https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${summonerId}`,
+      qs: {
+        api_key: apiKey
+      },
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
+    }
+  );
+
+  rp(summonerStatsRequest(req.params.summonerName))
+    .then(response => {
+      res.json(response);
+      rp(spectatorRequest(response.id))
+        .then(response => {
+          res.json(response);
+        })
+        .catch(error => {
+          console.log(error.statusCode);
+          if (error.statusCode === 404) {
+            console.log("The summoner isn't currrently in a game.")
+          }
+        });
+    })
+    .catch(error => {
+
+    });
+
+});
+
+/*
+  Endpoint aggregating match data for a given summoner name.
+*/
+
+app.get("/match-aggregations/:summonerName", (req, res) => {
+
+  const matchAggregations = {
+    currentGameId: '',
   }
 
   /*
@@ -102,7 +162,7 @@ app.get("/current-champion/:summonerName", (req, res) => {
   const summonerRequestOptions = {
     uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
     qs: {
-      api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+      api_key: apiKey
     },
     headers: {
       'User-Agent': 'Request-Promise'
@@ -114,11 +174,14 @@ app.get("/current-champion/:summonerName", (req, res) => {
     summoner/v3/match/matchlists/by-account/{accountId}
   */
 
-  const matchRequest = (accountId) => (
+  const matchRequest = (accountId, championId) => (
     matchRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/${accountId}`,
       qs: {
-        api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5'
+        champion: championId,
+        queue: 420,
+        season: 11,
+        api_key: apiKey
       },
       headers: {
         'User-Agent': 'Request-Promise'
@@ -135,7 +198,7 @@ app.get("/current-champion/:summonerName", (req, res) => {
     championsRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/static-data/v3/champions/${id}`,
       qs: {
-        api_key: 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5',
+        api_key: apiKey
       },
       headers: {
         'User-Agent': 'Request-Promise'
@@ -143,40 +206,7 @@ app.get("/current-champion/:summonerName", (req, res) => {
       json: true
     }
   );
-
-  rp(summonerRequestOptions)
-    .then(response => {
-      const accountId = response.accountId;
-
-      rp(matchRequest(accountId))
-        .then(response => {
-          const matches = response.matches;
-          const latestMatch = matches[0];
-          const championId = latestMatch.champion;
-
-          rp(championsRequest(championId))
-            .then(response => {
-              currentChampion.name = response.name;
-              res.json(currentChampion)
-            })
-            .catch(error => {
-
-            });
-        })
-        .catch(error => {
-
-        });
-    })
-    .catch(error => {
-      console.log(error.statusCode);
-      console.log("Error accessing Summoner-v3");
-    });
 });
-
-app.get("/match-aggregations/:summonerName", (req, res) => {
-
-});
-
 
 
 app.listen(port, () => {
