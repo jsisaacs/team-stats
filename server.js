@@ -1,3 +1,4 @@
+require('dotenv').config()  // configure dotenv
 const express = require("express")
 const rp = require('request-promise')
 const cors = require("cors")
@@ -8,8 +9,6 @@ const publicPath = path.join(__dirname, ".", "public")
 
 const app = express()
 app.use(cors())
-
-var apiKey = 'RGAPI-3db88058-a7d2-47bf-bce7-9e7c75b9f6c5';
 
 /*
   Endpoint to recieve basic statistics about a summoner.
@@ -32,11 +31,11 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
   /*
     summoner/v3/summoners/by-name/{summonerName}
   */
- 
+
   const summonerRequestOptions = {
     uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
     qs: {
-      api_key: apiKey
+      api_key: process.env.API_KEY
     },
     headers: {
       'User-Agent': 'Request-Promise'
@@ -51,13 +50,13 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
   const leagueRequest = (id) => (
     leagueRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${id}`,
-        qs: {
-          api_key: apiKey
-        },
-        headers: {
-          'User-Agent': 'Request-Promise'
-        },
-        json: true
+      qs: {
+        api_key: process.env.API_KEY
+      },
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
     }
   );
 
@@ -70,7 +69,6 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
         .then(response => {
           //Get the solo Queue info
           const soloQueue = response.filter(league => league.queueType === 'RANKED_SOLO_5x5')[0];
-
           summonerStats.tier = soloQueue.tier;
           summonerStats.rank = soloQueue.rank;
           summonerStats.leaguePoints = soloQueue.leaguePoints;
@@ -107,7 +105,7 @@ app.get("/current-match/:summonerName", (req, res) => {
       json: true
     }
   );
-  
+
   /*
     spectator/v3/active-games/by-summoner/{summonerId}
   */
@@ -116,7 +114,7 @@ app.get("/current-match/:summonerName", (req, res) => {
     spectatorRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${summonerId}`,
       qs: {
-        api_key: apiKey
+        api_key: process.env.API_KEY
       },
       headers: {
         'User-Agent': 'Request-Promise'
@@ -158,11 +156,11 @@ app.get("/match-aggregations/:summonerName", (req, res) => {
   /*
     summoner/v3/summoners/by-name/{summonerName}
   */
- 
+
   const summonerRequestOptions = {
     uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
     qs: {
-      api_key: apiKey
+      api_key: process.env.API_KEY
     },
     headers: {
       'User-Agent': 'Request-Promise'
@@ -181,7 +179,7 @@ app.get("/match-aggregations/:summonerName", (req, res) => {
         champion: championId,
         queue: 420,
         season: 11,
-        api_key: apiKey
+        api_key: process.env.API_KEY
       },
       headers: {
         'User-Agent': 'Request-Promise'
@@ -198,7 +196,7 @@ app.get("/match-aggregations/:summonerName", (req, res) => {
     championsRequestOptions = {
       uri: `https://na1.api.riotgames.com/lol/static-data/v3/champions/${id}`,
       qs: {
-        api_key: apiKey
+        api_key: process.env.API_KEY
       },
       headers: {
         'User-Agent': 'Request-Promise'
