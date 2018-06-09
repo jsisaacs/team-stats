@@ -1,6 +1,5 @@
 import React from "react";
 import "./InputForm.css";
-import { link } from "fs";
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -13,8 +12,7 @@ class InputForm extends React.Component {
 
   handleChange = event => {
     this.setState({
-      value: event.target.value,
-      team: []
+      value: event.target.value
     });
   };
 
@@ -22,53 +20,52 @@ class InputForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const text = this.state.value;
-    let splitText = text.split(' joined the lobby');
-    splitText.pop();
-
-    // const team = [... this.state.team];
-    // splitText.map(summoner => {
-    //   if (this.isValidSummonerName() === true) {
-    //     team.push(da)
-    //   }
-    // });
+    let splitText = text.replace(/ joined the lobby/g, '').split('\n')
+    console.log(splitText)
 
     //add all summoners to the team
+    this.setState({ team: [] })
     for (let i = 0; i < splitText.length; i++) {
-      fetch(`http://localhost:12344/summoner/${splitText[i]}`)
+      fetch(`http://localhost:12344/summoner-stats/${splitText[i]}`)
         .then(res => res.json())
         .then(data => {
-          const team = [...this.state.team];
-          if (data === undefined) {
-            console.log("Doesnt exist")
-          }
-          team.push(data);
-          this.setState({
-            team
-          });
-          console.log(team)
-        });
+          let team = [...this.state.team]
+          team.push(data)
+          this.setState({ team })
+        })
     }
   };
+
+  checkLiveGame = event => {
+
+  }
 
   render() {
     return (
       <div>
+
         <form onSubmit={this.handleSubmit}>
           <label>
             Summoners:
-            <input
-              type="text"
+            <textarea
+              rows='5'
+              cols='40'
               value={this.state.value}
               onChange={this.handleChange}
             />
           </label>
           <input type="submit" value="Submit" />
         </form>
+
         <ul>
           {this.state.team.map(user => (
-            <li>{`Name: ${user.name} and Level: ${user.summonerLevel}`}</li>
+            <div>
+              <li key={user.id}>{`Name: ${user.name}`}</li>
+              <button onClick={this.checkLiveGame}>Live game</button>
+            </div>
           ))}
         </ul>
+
       </div>
     );
   }

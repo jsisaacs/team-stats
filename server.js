@@ -18,14 +18,15 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
 
   //JSON to be returned
   const summonerStats = {
-    name: undefined,
-    id: undefined,
-    accountId: undefined,
-    tier: undefined,
-    rank: undefined,
-    leaguePoints: undefined,
-    winrate: undefined,
-    hotStreak: undefined,
+    name: 'Player not found',
+    id: -1,
+    accountId: -1,
+    tier: null,
+    rank: null,
+    leaguePoints: null,
+    winrate: null,
+    hotStreak: null,
+    error: null,
   }
 
   /*
@@ -76,13 +77,13 @@ app.get("/summoner-stats/:summonerName", (req, res) => {
           res.json(summonerStats);
         })
         .catch(error => {
-          console.log(error.statusCode);
-          console.log("Error accessing League-v3");
+          console.log(error.message + ' ----- Error happened while accessing League-v3')
+          res.json(summonerStats)
         })
     })
     .catch(error => {
-      console.log(error.statusCode);
-      console.log("Error accessing Summoner-v3");
+      console.log(error.message + ' ----- Error happened while accessing Summoner-v3');
+      res.json(summonerStats)
     });
 });
 
