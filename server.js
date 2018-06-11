@@ -2,13 +2,71 @@ require('dotenv').config()  // configure dotenv
 const express = require("express")
 const rp = require('request-promise')
 const cors = require("cors")
-const queryString = require("query-string")
+const _kayn = require('kayn')
+const Kayn = _kayn.Kayn
+const REGIONS = _kayn.REGIONS
 const path = require("path")
 const port = process.env.PORT || 12344
 const publicPath = path.join(__dirname, ".", "public")
 
 const app = express()
 app.use(cors())
+
+const kayn = Kayn(process.env.API_KEY)({
+  region: 'na',
+    debugOptions: {
+        isEnabled: true,
+        showKey: false,
+    },
+    requestOptions: {
+        shouldRetry: true,
+        numberOfRetriesBeforeAbort: 3,
+        delayBeforeRetry: 1000,
+    },
+    cacheOptions: {
+        cache: null
+    }
+})
+
+/*
+  Endpoint aggregating match data for a given summoner name and champion id.
+*/
+
+app.get("/match-aggregations/:summonerName/:championId", (req, res) => {
+  kayn.Summoner.by
+    .name(req.params.summonerName)
+    .then(response => {
+      kayn.Matchlist.by
+        .accountID(response.accountId)
+        .query({
+          endIndex: 20,
+          champion: req.params.championId,
+          queue: 420,
+          season: 11
+        })
+        .then(response => {
+          const matchDataRequests = [];
+          
+          response.matches.map(match => {
+            matchDataRequests.push(
+              kayn.Match
+              .get(match.gameId)
+            )
+          })
+             
+          Promise.all(matchDataRequests)
+            .then(matchData => {
+              res.json(matchData);
+            })
+        })
+        .catch(error => {
+          console.log(`${error.statusCode}: Error accessing match timeline.`);
+        });
+    })
+    .catch(error => {
+      console.log(`${error.statusCode}: Error accessing summoner data.`);
+    });
+});
 
 /*
   Endpoint to recieve basic statistics about a summoner.
@@ -143,70 +201,6 @@ app.get("/current-match/:summonerName", (req, res) => {
     });
 
 });
-
-/*
-  Endpoint aggregating match data for a given summoner name.
-*/
-
-app.get("/match-aggregations/:summonerName", (req, res) => {
-
-  const matchAggregations = {
-    currentGameId: '',
-  }
-
-  /*
-    summoner/v3/summoners/by-name/{summonerName}
-  */
-
-  const summonerRequestOptions = {
-    uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${req.params.summonerName}`,
-    qs: {
-      api_key: process.env.API_KEY
-    },
-    headers: {
-      'User-Agent': 'Request-Promise'
-    },
-    json: true
-  }
-
-  /*
-    summoner/v3/match/matchlists/by-account/{accountId}
-  */
-
-  const matchRequest = (accountId, championId) => (
-    matchRequestOptions = {
-      uri: `https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/${accountId}`,
-      qs: {
-        champion: championId,
-        queue: 420,
-        season: 11,
-        api_key: process.env.API_KEY
-      },
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
-  );
-
-  /*
-    static-data/v3/champions/{id}
-  */
-
-  const championsRequest = (id) => (
-    championsRequestOptions = {
-      uri: `https://na1.api.riotgames.com/lol/static-data/v3/champions/${id}`,
-      qs: {
-        api_key: process.env.API_KEY
-      },
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
-  );
-});
-
 
 app.listen(port, () => {
   console.log("running at http://localhost:" + port)
