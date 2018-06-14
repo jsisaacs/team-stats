@@ -2,12 +2,14 @@
   "name": "team-stats",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "kayn": "^0.8.15",
+    "nodemon": "^1.17.5",
     "query-string": "^6.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -20,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dev": "concurrently --kill-others \"nodemon server.js\" \"yarn start\"",
+    "dev": "concurrently --kill-others \"nodemon ./server/server.js\" \"yarn start\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
