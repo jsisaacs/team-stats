@@ -8,11 +8,14 @@ app.use(cors());
 const summonerInfo = require("./summonerInfo");
 app.use(summonerInfo);
 
+const currentMatch = require("./currentMatch");
+app.use(currentMatch);
+
 const championStatistics = require("./championStatistics");
 app.use(championStatistics);
 
-const currentMatch = require("./currentMatch");
-app.use(currentMatch);
+const badges = require("./badges");
+app.use(badges);
 
 app.listen(port, () => {
   console.log("running at http://localhost:" + port);
