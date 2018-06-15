@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const rp = require("request-promise");
 /*
-  Endpoint to recieve basic statistics about a summoner.
+  Endpoint to recieve basic info about a summoner.
 */
-router.get("/summoner-stats/:summonerName", (req, res) => {
+router.get("/summoner-info/:summonerName", (req, res) => {
   //JSON to be returned
-  const summonerStats = {
+  const summonerInfo = {
     name: "Player not found",
     id: -1,
     accountId: -1,
@@ -53,33 +53,28 @@ router.get("/summoner-stats/:summonerName", (req, res) => {
 
   rp(summonerRequestOptions)
     .then(response => {
-      summonerStats.name = response.name;
-      summonerStats.id = response.id;
-      summonerStats.accountId = response.accountId;
-      rp(leagueRequest(summonerStats.id))
+      summonerInfo.name = response.name;
+      summonerInfo.id = response.id;
+      summonerInfo.accountId = response.accountId;
+      rp(leagueRequest(summonerInfo.id))
         .then(response => {
-          //Get the solo Queue info
           const soloQueue = response.filter(
             league => league.queueType === "RANKED_SOLO_5x5"
           )[0];
-          summonerStats.tier = soloQueue.tier;
-          summonerStats.rank = soloQueue.rank;
-          summonerStats.leaguePoints = soloQueue.leaguePoints;
-          summonerStats.hotStreak = soloQueue.hotStreak;
-          res.json(summonerStats);
+          summonerInfo.tier = soloQueue.tier;
+          summonerInfo.rank = soloQueue.rank;
+          summonerInfo.leaguePoints = soloQueue.leaguePoints;
+          summonerInfo.hotStreak = soloQueue.hotStreak;
+          res.json(summonerInfo);
         })
         .catch(error => {
-          console.log(
-            error.message + " ----- Error happened while accessing League-v3"
-          );
-          res.json(summonerStats);
+          res.json(error.statusCode);
+          console.log(`${error.statusCode}: Error accessing League-v3.`);
         });
     })
     .catch(error => {
-      console.log(
-        error.message + " ----- Error happened while accessing Summoner-v3"
-      );
-      res.json(summonerStats);
+      res.json(error.statusCode);
+      console.log(`${error.statusCode}: Error accessing Summoner-v3.`);
     });
 });
 

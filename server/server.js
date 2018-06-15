@@ -5,14 +5,11 @@ const port = process.env.PORT || 12344;
 const app = express();
 app.use(cors());
 
-const basicStats = require("./basicStats");
-app.use(basicStats);
+const summonerInfo = require("./summonerInfo");
+app.use(summonerInfo);
 
-const aggregateMatch = require("./aggregateMatch");
-app.use(aggregateMatch);
-
-const mostPlayed = require("./mostPlayed");
-app.use(mostPlayed);
+const championStatistics = require("./championStatistics");
+app.use(championStatistics);
 
 const currentMatch = require("./currentMatch");
 app.use(currentMatch);
