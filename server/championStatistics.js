@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const rp = require("request-promise");
 const cheerio = require("cheerio");
+const champions = require("lol-champions");
+
+function getChampionId(championName) {
+  const getChampion = champions.filter(champion => {
+    return champion.name === championName;
+  });
+  return getChampion[0].key;
+}
 
 /*
   Return champion statistics for a specific summoner and champion.
@@ -34,14 +42,13 @@ router.get("/champion-statistics/:summonerName/:championName", (req, res) => {
         const tableData = $('.Body').html();
 
         $('tr').each(function (i, elem) {
-          // if (i > 10) {
-          //   return false;
-          // } else {
+            const champName = $('tr').not($('tr')[0]).eq(i).children().eq(1).children().first().children().text();
 
             //data scraped from OP.GG 
             const championData = {
               championRank: i + 1,
-              championName: $('tr').not($('tr')[0]).eq(i).children().eq(1).children().first().children().text(),
+              championName: champName,
+              championId: undefined,
               championImage: undefined,
               wins: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(1).text().slice(0, -1).replace(/,/g, '')),
               losses: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(3).text().slice(0, -1).replace(/,/g, '')),
@@ -62,12 +69,13 @@ router.get("/champion-statistics/:summonerName/:championName", (req, res) => {
               pentaKill: Number($('tr').not($('tr')[0]).eq(i).children().eq(14).text().slice(14, -12).replace(/,/g, ''))
             }
             summonerStats.push(championData);
-          //}
         });
         summonerStats.pop();
-        res.json(summonerStats.filter(summonerStat => {
+        const filteredOutput = summonerStats.filter(summonerStat => {
           return summonerStat.championName === req.params.championName;
-        }))
+        });
+        filteredOutput[0].championId = getChampionId(filteredOutput[0].championName);
+        res.json(filteredOutput);
       })
       .catch(error => {
         res.json(error.statusCode);
@@ -119,6 +127,7 @@ router.get("/champion-statistics/:summonerName/", (req, res) => {
             const championData = {
               championRank: i + 1,
               championName: $('tr').not($('tr')[0]).eq(i).children().eq(1).children().first().children().text(),
+              championId: undefined,
               championImage: undefined,
               wins: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(1).text().slice(0, -1).replace(/,/g, '')),
               losses: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(3).text().slice(0, -1).replace(/,/g, '')),
@@ -142,6 +151,11 @@ router.get("/champion-statistics/:summonerName/", (req, res) => {
           }
         });
         summonerStats.pop();
+
+        summonerStats.map(champion => {
+          champion.championId = getChampionId(champion.championName);
+        });
+
         res.json(summonerStats);
       })
       .catch(error => {
