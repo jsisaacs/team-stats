@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const rp = require("request-promise");
 const { Kayn } = require('kayn');
 
 const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
@@ -41,8 +40,7 @@ router.get("/summoner-info/:region/:summonerName", (req, res) => {
         winRate: winRate
       });
       console.log('200: Success accessing /summoner-info.');
-    } 
-    catch (error) {
+    } catch (error) {
       res.json(error.statusCode);
       console.log(`${error.statusCode}: Error accessing /summoner-info.`);
     }
