@@ -2,20 +2,27 @@ const express = require("express");
 const router = express.Router();
 const rp = require("request-promise");
 
+function calculateChampionRating(gameNumber, winRate, mastery, damageDealt, damageTaken, kdaRatio, rank) {
+  //TODO
+}
+
 router.get("/badges/:summonerName/:championName", (req, res) => {
-  const badges = {
-    hotStreak: false,
-    mastery6: false,
-    mastery7: false,
-    newbie: false,
-    fiftyGames: false,
-    hundredGames: false,
-    sixtyPlusWinrate: false,
-    highDamage: false,
-    goldMachine: false,
-    terrible: false,
-    strongKDA: false,
-    excellentKDA: false
+  const result = {
+    badges: {
+      hotStreak: false,
+      mastery6: false,
+      mastery7: false,
+      newbie: false,
+      fiftyGames: false,
+      veteran: false,
+      sixtyPlusWinrate: false,
+      highDamage: false,
+      goldMachine: false,
+      terrible: false,
+      strongKDA: false,
+      excellentKDA: false
+    },
+    championRating: 85
   }
 
   const championStatisticsRequest = (summonerName, championName) => 
@@ -49,41 +56,41 @@ router.get("/badges/:summonerName/:championName", (req, res) => {
       const kdaRatio = (kills + assists) / deaths;
       rp(championMasteryRequest(req.params.summonerName, req.params.championName))
         .then(response => {
-          badges.hotStreak = response.hotStreak;
+          result.badges.hotStreak = response.hotStreak;
           if (response.championLevel === 6) {
-            badges.mastery6 = true;
+            result.badges.mastery6 = true;
           }
           if (response.championLevel === 7) {
-            badges.mastery7 = true;
+            result.badges.mastery7 = true;
           }
           if (gameNumber <= 15) {
-            badges.newbie = true;
+            result.badges.newbie = true;
           }
           if (gameNumber >= 50 && gameNumber < 100) {
-            badges.fiftyGames = true;
+            result.badges.fiftyGames = true;
           }
           if (gameNumber >= 100) {
-            badges.hundredGames = true;
+            result.badges.hundredGames = true;
           }
           if (winRate >= 60) {
-            badges.sixtyPlusWinrate = true;
+            result.badges.sixtyPlusWinrate = true;
           }
           if (winRate <= 42 && gameNumber >= 15) {
-            badges.terrible = true;
+            result.badges.terrible = true;
           }
           if (kdaRatio >= 3 && kdaRatio < 4) {
-            badges.strongKDA = true;
+            result.badges.strongKDA = true;
           }
           if (kdaRatio >= 4) {
-            badges.excellentKDA = true;
+            result.badges.excellentKDA = true;
           }
           if (gold > 12000) {
-            badges.goldMachine = true;
+            result.badges.goldMachine = true;
           }
           if (damage >= 120000) {
-            badges.highDamage = true;
+            result.badges.highDamage = true;
           }
-          res.json(badges);
+          res.json(result);
         })
         .catch(error => {
           console.log(`${error.statusCode}: Error accessing champion mastery data.`);

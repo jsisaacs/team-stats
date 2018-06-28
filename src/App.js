@@ -5,7 +5,7 @@ import InputForm from './InputForm'
 class App extends Component {
   render() {
     return (
-      <InputForm />   
+      <InputForm />  
     )
   }
 }

@@ -5,7 +5,7 @@ const rp = require("request-promise");
 /*
   Returns the participants of the current match, their championId, and the game's platformId. If the summoner isn't in a game, returns 404.
 */
-router.get("/current-match/:summonerName", (req, res) => {
+router.get("/current-match/:region/:summonerName", (req, res) => {
   const currentMatch = {
     participants: {
       team1: [],
@@ -18,9 +18,9 @@ router.get("/current-match/:summonerName", (req, res) => {
     summoner-info/{summonerName}
   */
 
-  const summonerInfoRequest = summonerName =>
+  const summonerInfoRequest = (region, summonerName) =>
     (summonerInfoRequestOptions = {
-      uri: `http://localhost:12344/summoner-info/${summonerName}`,
+      uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
       headers: {
         "User-Agent": "Request-Promise"
       },
@@ -31,9 +31,9 @@ router.get("/current-match/:summonerName", (req, res) => {
     spectator/v3/active-games/by-summoner/{summonerId}
   */
 
-  const spectatorRequest = summonerId =>
+  const spectatorRequest = (region, summonerId) =>
     (spectatorRequestOptions = {
-      uri: `https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${summonerId}`,
+      uri: `https://${region}.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${summonerId}`,
       qs: {
         api_key: process.env.API_KEY
       },
@@ -43,9 +43,9 @@ router.get("/current-match/:summonerName", (req, res) => {
       json: true
     });
 
-  rp(summonerInfoRequest(req.params.summonerName))
+  rp(summonerInfoRequest(req.params.region, req.params.summonerName))
     .then(response => {
-      rp(spectatorRequest(response.id))
+      rp(spectatorRequest(req.params.region, response.id))
         .then(response => {
           if (response.gameQueueConfigId === 420) {
             response.participants.map(participant => {
