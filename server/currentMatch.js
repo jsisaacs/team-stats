@@ -1,80 +1,62 @@
 const express = require("express");
 const router = express.Router();
-const rp = require("request-promise");
+const { Kayn } = require('kayn');
+
+const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
+  debugOptions: {
+    isEnabled: false,
+    showKey: false,
+  },
+  requestOptions: {
+    shouldRetry: true,
+    numberOfRetriesBeforeAbort: 3,
+    delayBeforeRetry: 1000,
+  },
+});
 
 /*
   Returns the participants of the current match, their championId, and the game's platformId. If the summoner isn't in a game, returns 404.
 */
 router.get("/current-match/:region/:summonerName", (req, res) => {
-  const currentMatch = {
-    participants: {
-      team1: [],
-      team2: [],
-    },
-    platformId: ''
-  }
+  const currentMatch = async () => {
+    try {
+      const match = {
+        participants: {
+          team1: [],
+          team2: [],
+        },
+        platformId: ''
+      }
+  
+      const { id, accountId, name } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
+  
+      const currentGame = await kayn.CurrentGame.by.summonerID(id).region(req.params.region);
 
-  /*
-    summoner-info/{summonerName}
-  */
+      if (currentGame.gameQueueConfigId === 420) {
+        currentGame.participants.map(participant => {
+          const summoner = {
+            summonerId: participant.summonerId,
+            championId: participant.championId
+          }
 
-  const summonerInfoRequest = (region, summonerName) =>
-    (summonerInfoRequestOptions = {
-      uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      json: true
-    });
-
-  /*
-    spectator/v3/active-games/by-summoner/{summonerId}
-  */
-
-  const spectatorRequest = (region, summonerId) =>
-    (spectatorRequestOptions = {
-      uri: `https://${region}.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/${summonerId}`,
-      qs: {
-        api_key: process.env.API_KEY
-      },
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      json: true
-    });
-
-  rp(summonerInfoRequest(req.params.region, req.params.summonerName))
-    .then(response => {
-      rp(spectatorRequest(req.params.region, response.id))
-        .then(response => {
-          if (response.gameQueueConfigId === 420) {
-            response.participants.map(participant => {
-              const summoner = {
-                summonerId: participant.summonerId,
-                championId: participant.championId
-              }
-              
-              if (participant.teamId === 100) {
-                currentMatch.participants.team1.push(summoner);
-              } else {
-                currentMatch.participants.team2.push(summoner);
-              }
-            }) 
-            currentMatch.platformId = response.platformId;
-            res.json(currentMatch);
+          if (participant.teamId === 100) {
+            match.participants.team1.push(summoner);
           } else {
-            res.json("404: Summoner is not playing ranked.")
+            match.participants.team2.push(summoner);
           }
         })
-        .catch(error => {
-          res.json(error.statusCode);
-          console.log(`${error.statusCode}: Error accessing Spectator-v3.`);
-        });
-    })
-    .catch(error => {
+        
+        match.platformId = currentGame.platformId;
+
+        res.json(match);
+        console.log('200: Success accessing /current-match.')   
+      }  
+    } catch (error) {
       res.json(error.statusCode);
-      console.log(`${error.statusCode}: Error accessing summoner-info data.`);
-    });
+      console.log(`${error.statusCode}: Error accessing /current-match.`);
+    }
+  }
+  currentMatch();
 });
 
 module.exports = router;
