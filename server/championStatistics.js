@@ -15,12 +15,12 @@ function getChampionId(championName) {
   Return champion statistics for a specific summoner and champion.
 */
 
-router.get("/champion-statistics/:summonerName/:championName", (req, res) => {
+router.get("/champion-statistics/:region/:summonerName/:championName", (req, res) => {
   const summonerStats = [];
 
-  const summonerInfoRequest = summonerName =>
+  const summonerInfoRequest = (region, summonerName) =>
     (summonerInfoRequestOptions = {
-      uri: `http://localhost:12344/summoner-info/${summonerName}`,
+      uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
       headers: {
         "User-Agent": "Request-Promise"
       },

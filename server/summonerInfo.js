@@ -1,81 +1,51 @@
 const express = require("express");
 const router = express.Router();
-const rp = require("request-promise");
+const { Kayn } = require('kayn');
+
+const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
+  debugOptions: {
+    isEnabled: false,
+    showKey: false,
+  },
+  requestOptions: {
+    shouldRetry: true,
+    numberOfRetriesBeforeAbort: 3,
+    delayBeforeRetry: 1000,
+  },
+});
+
 /*
   Endpoint to recieve basic info about a summoner.
 */
-router.get("/summoner-info/:summonerName", (req, res) => {
-  //JSON to be returned
-  const summonerInfo = {
-    name: "Player not found",
-    id: -1,
-    accountId: -1,
-    tier: null,
-    rank: null,
-    leaguePoints: null,
-    winrate: null,
-    hotStreak: null,
-    error: null
-  };
+router.get("/summoner-info/:region/:summonerName", (req, res) => {
+  const summonerInfo = async () => {
+    try {
+      const { id, accountId, name } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
 
-  /*
-    summoner/v3/summoners/by-name/{summonerName}
-  */
-
-  const summonerRequestOptions = {
-    uri: `https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/${
-      req.params.summonerName
-    }`,
-    qs: {
-      api_key: process.env.API_KEY
-    },
-    headers: {
-      "User-Agent": "Request-Promise"
-    },
-    json: true
-  };
-
-  /*
-    league/v3/positions/by-summoner/{summonerId}
-  */
-
-  const leagueRequest = id =>
-    (leagueRequestOptions = {
-      uri: `https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/${id}`,
-      qs: {
-        api_key: process.env.API_KEY
-      },
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      json: true
-    });
-
-  rp(summonerRequestOptions)
-    .then(response => {
-      summonerInfo.name = response.name;
-      summonerInfo.id = response.id;
-      summonerInfo.accountId = response.accountId;
-      rp(leagueRequest(summonerInfo.id))
-        .then(response => {
-          const soloQueue = response.filter(
-            league => league.queueType === "RANKED_SOLO_5x5"
-          )[0];
-          summonerInfo.tier = soloQueue.tier;
-          summonerInfo.rank = soloQueue.rank;
-          summonerInfo.leaguePoints = soloQueue.leaguePoints;
-          summonerInfo.hotStreak = soloQueue.hotStreak;
-          res.json(summonerInfo);
-        })
-        .catch(error => {
-          res.json(error.statusCode);
-          console.log(`${error.statusCode}: Error accessing League-v3.`);
-        });
-    })
-    .catch(error => {
+      const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
+  
+      const { tier, rank, leaguePoints, queueType, hotStreak, wins, losses } = leaguePosition[0];
+  
+      const winRate = Number((wins / (wins + losses) * 100).toFixed(2));
+  
+      res.json({
+        id: id,
+        accountId: accountId,
+        name: name,
+        tier: tier,
+        rank: rank,
+        leaguePoints: leaguePoints,
+        queueType: queueType,
+        hotStreak: hotStreak,
+        winRate: winRate
+      });
+      console.log('200: Success accessing /summoner-info.');
+    } catch (error) {
       res.json(error.statusCode);
-      console.log(`${error.statusCode}: Error accessing Summoner-v3.`);
-    });
+      console.log(`${error.statusCode}: Error accessing /summoner-info.`);
+    }
+  }
+  summonerInfo();
 });
 
 module.exports = router;
