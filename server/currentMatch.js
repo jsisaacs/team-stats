@@ -24,17 +24,17 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
         participants: {
           team1: [],
           team2: [],
-        },
-        platformId: ''
+        }
       }
   
-      const { id, accountId, name } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
-  
+      const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
+
       const currentGame = await kayn.CurrentGame.by.summonerID(id).region(req.params.region);
 
       if (currentGame.gameQueueConfigId === 420) {
         currentGame.participants.map(participant => {
           const summoner = {
+            summonerName: participant.summonerName,
             summonerId: participant.summonerId,
             championId: participant.championId
           }
@@ -45,11 +45,12 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
             match.participants.team2.push(summoner);
           }
         })
-        
-        match.platformId = currentGame.platformId;
 
         res.json(match);
         console.log('200: Success accessing /current-match.')   
+      } else {
+        res.json(404);
+        console.log("404: Current game exists, but is not 5v5 Ranked Solo.")
       }  
     } catch (error) {
       res.json(error.statusCode);
