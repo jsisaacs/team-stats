@@ -1,104 +1,123 @@
 const express = require("express");
 const router = express.Router();
+const { Kayn } = require('kayn');
 const rp = require("request-promise");
 
-function calculateChampionRating(gameNumber, winRate, mastery, damageDealt, damageTaken, kdaRatio, rank) {
-  //TODO
-}
+const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
+  debugOptions: {
+    isEnabled: false,
+    showKey: false,
+  },
+  requestOptions: {
+    shouldRetry: true,
+    numberOfRetriesBeforeAbort: 3,
+    delayBeforeRetry: 1000,
+  },
+});
 
-router.get("/badges/:summonerName/:championName", (req, res) => {
-  const result = {
-    badges: {
-      hotStreak: false,
-      mastery6: false,
-      mastery7: false,
-      newbie: false,
-      fiftyGames: false,
-      veteran: false,
-      sixtyPlusWinrate: false,
-      highDamage: false,
-      goldMachine: false,
-      terrible: false,
-      strongKDA: false,
-      excellentKDA: false
-    },
-    championRating: 85
-  }
-
-  const championStatisticsRequest = (summonerName, championName) => 
+const championStatisticsRequest = (region, summonerName, championName) => 
   (championStatisticsRequestOptions = {
-    uri: `http://localhost:12344/champion-statistics/${summonerName}/${championName}`,
+    uri: `http://localhost:12344/champion-statistics/${region}/${summonerName}/${championName}`,
     headers: {
       "User-Agent": "Request-Promise"
     },
     json: true
   });
+    
+const championMasteryRequest = (region, summonerName, championName) => 
+  (championMasteryRequestOptions = {
+  uri: `http://localhost:12344/champion-mastery/${region}/${summonerName}/${championName}`,
+  headers: {
+    "User-Agent": "Request-Promise"
+  },
+  json: true
+});
 
-  const championMasteryRequest = (summonerName, championName) => (
-    championMasteryRequestOptions = {
-      uri: `http://localhost:12344/champion-mastery/${summonerName}/${championName}`,
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      json: true
-    }
-  );
+router.get("/badges/:region/:summonerName/:championName", (req, res) => {
+  const badges = async () => {
+    try {
+      const response = {
+        badges: {
+          hotStreak: false,
+          mastery6: false,
+          mastery7: false,
+          newbie: false,
+          fiftyGames: false,
+          veteran: false,
+          sixtyPlusWinrate: false,
+          highDamage: false,
+          goldMachine: false,
+          terrible: false,
+          strongKDA: false,
+          excellentKDA: false,
+          inPromos: false
+        },
+        championRating: 85
+      }
 
-  rp(championStatisticsRequest(req.params.summonerName, req.params.championName))
-    .then(responseStats => {
-      const gameNumber = responseStats[0].wins + responseStats[0].losses;
-      const winRate = Number(Number((responseStats[0].wins / gameNumber) * 100).toFixed(2));
-      const gold = responseStats[0].gold;
-      const damage = responseStats[0].averageDamageDealt;
-      const kills = responseStats[0].kda.kills;
-      const deaths = responseStats[0].kda.deaths;
-      const assists = responseStats[0].kda.assists;
+      const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
+      
+      const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
+      const { leaguePoints, hotStreak } = leaguePosition[0];
+
+      const championStatistics = await rp(championStatisticsRequest(req.params.region, req.params.summonerName, req.params.championName));
+      const championMastery = await rp(championMasteryRequest(req.params.region, req.params.summonerName, req.params.championName));
+
+      const gameNumber = championStatistics.wins + championStatistics.losses;
+      const winRate = Number(Number((championStatistics.wins / gameNumber) * 100).toFixed(2));
+      const gold = championStatistics.gold;
+      const damage = championStatistics.averageDamageDealt;
+      const kills = championStatistics.kda.kills;
+      const deaths = championStatistics.kda.deaths;
+      const assists = championStatistics.kda.assists;
       const kdaRatio = (kills + assists) / deaths;
-      rp(championMasteryRequest(req.params.summonerName, req.params.championName))
-        .then(response => {
-          result.badges.hotStreak = response.hotStreak;
-          if (response.championLevel === 6) {
-            result.badges.mastery6 = true;
-          }
-          if (response.championLevel === 7) {
-            result.badges.mastery7 = true;
-          }
-          if (gameNumber <= 15) {
-            result.badges.newbie = true;
-          }
-          if (gameNumber >= 50 && gameNumber < 100) {
-            result.badges.fiftyGames = true;
-          }
-          if (gameNumber >= 100) {
-            result.badges.hundredGames = true;
-          }
-          if (winRate >= 60) {
-            result.badges.sixtyPlusWinrate = true;
-          }
-          if (winRate <= 42 && gameNumber >= 15) {
-            result.badges.terrible = true;
-          }
-          if (kdaRatio >= 3 && kdaRatio < 4) {
-            result.badges.strongKDA = true;
-          }
-          if (kdaRatio >= 4) {
-            result.badges.excellentKDA = true;
-          }
-          if (gold > 12000) {
-            result.badges.goldMachine = true;
-          }
-          if (damage >= 120000) {
-            result.badges.highDamage = true;
-          }
-          res.json(result);
-        })
-        .catch(error => {
-          console.log(`${error.statusCode}: Error accessing champion mastery data.`);
-        });
-    })
-    .catch(error => {
-      console.log(`${error.statusCode}: Error accessing champion badges.`);
-    });
+      
+      response.badges.hotStreak = hotStreak;
+      if (championMastery.championLevel === 6) {
+        response.badges.mastery6 = true;
+      }
+      if (championMastery.championLevel === 7) {
+        response.badges.mastery7 = true;
+      }
+      if (gameNumber <= 15) {
+        response.badges.newbie = true;
+      }
+      if (gameNumber >= 50 && gameNumber < 100) {
+        response.badges.fiftyGames = true;
+      }
+      if (gameNumber >= 100) {
+        response.badges.hundredGames = true;
+      }
+      if (winRate >= 60) {
+        response.badges.sixtyPlusWinrate = true;
+      }
+      if (winRate <= 42 && gameNumber >= 15) {
+        response.badges.terrible = true;
+      }
+      if (kdaRatio >= 3 && kdaRatio < 4) {
+        response.badges.strongKDA = true;
+      }
+      if (kdaRatio >= 4) {
+        response.badges.excellentKDA = true;
+      }
+      if (gold > 12000) {
+        response.badges.goldMachine = true;
+      }
+      if (damage >= 120000) {
+        response.badges.highDamage = true;
+      }
+      if (leaguePoints === 100) {
+        response.badges.inPromos = true;
+      }
+
+      res.json(response);
+      console.log('200: Success accessing /badges.');
+    } catch (error) {
+      res.json(error.statusCode);
+      console.log(`${error.statusCode}: Error accessing /badges.`)
+    }
+  }
+  badges();
 });
 
 module.exports = router;
