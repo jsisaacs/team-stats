@@ -19,7 +19,7 @@ const championStatisticsRequest = (region, summonerName, championName) =>
   (championStatisticsRequestOptions = {
     uri: `http://localhost:12344/champion-statistics/${region}/${summonerName}/${championName}`,
     headers: {
-      "User-Agent": "Request-Promise"
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
     },
     json: true
   });
@@ -28,7 +28,7 @@ const championMasteryRequest = (region, summonerName, championName) =>
   (championMasteryRequestOptions = {
   uri: `http://localhost:12344/champion-mastery/${region}/${summonerName}/${championName}`,
   headers: {
-    "User-Agent": "Request-Promise"
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
   },
   json: true
 });
@@ -114,7 +114,7 @@ router.get("/badges/:region/:summonerName/:championName", (req, res) => {
       console.log('200: Success accessing /badges.');
     } catch (error) {
       res.json(error.statusCode);
-      console.log(`${error.statusCode}: Error accessing /badges.`)
+      console.log(`${error.statusCode}: Error accessing /badges.`);
     }
   }
   badges();

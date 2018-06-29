@@ -20,6 +20,9 @@ app.use(championMastery);
 const badges = require("./badges");
 app.use(badges);
 
+const championHistory = require("./championHistory");
+app.use(championHistory);
+
 app.listen(port, () => {
   console.log("running at http://localhost:" + port);
 });

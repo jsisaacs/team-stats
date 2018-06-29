@@ -44,7 +44,7 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
           } else {
             match.participants.team2.push(summoner);
           }
-        })
+        });
 
         res.json(match);
         console.log('200: Success accessing /current-match.')   
