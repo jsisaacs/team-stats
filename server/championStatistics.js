@@ -57,7 +57,7 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
       
       const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
 
-      function scrape(promise) {
+      scrape = promise => {
         Promise.resolve(promise).then($ => {
           const tableData = $('.Body').html();
           
@@ -106,10 +106,8 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
     
       if (req.params.region === 'kr') {
         const opggKRData = await rp(opggKR(id));
-        console.log("KR")
         scrape(opggKRData);
       } else {
-        console.log("WOW")
         const opggData = await rp(opggChampionStats(req.params.region, id));
         scrape(opggData);
       }
