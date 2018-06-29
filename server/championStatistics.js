@@ -95,7 +95,7 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
         });
         filteredOutput[0].championId = getChampionId(filteredOutput[0].championName);
 
-        res.json(filteredOutput);
+        res.json(filteredOutput[0]);
         console.log('200: Success accessing /champion-statistics.');
         })
         .catch(() => {
