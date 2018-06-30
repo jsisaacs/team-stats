@@ -59,8 +59,6 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
 
       scrape = promise => {
         Promise.resolve(promise).then($ => {
-          const tableData = $('.div').html();
-          
           $('tr').each(function (i, elem) {
             const champName = $('tr').not($('tr')[0]).eq(i).children().eq(1).children().first().children().text();
             const championData = {
