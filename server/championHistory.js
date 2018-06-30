@@ -15,6 +15,17 @@ const championGGStats = () =>
     json: true
   });
 
+const opggScrape = championName =>
+  (opggScrapeOptions = {
+    uri: `http://www.op.gg/champion/${championName}/statistics`,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+    },
+    transform: body => {
+      return cheerio.load(body);
+    }
+  });
+
 router.get("/champion-history/", (req, res) => {
   const championHistory = async () => {
     try {
@@ -29,10 +40,32 @@ router.get("/champion-history/", (req, res) => {
   championHistory();
 });
 
-router.get("/championGG-scrape/:championName", (req, res) => {
+router.get("/opgg-scrape/:championName", (req, res) => {
   const scrape = async () => {
     try {
-      //TODO
+      const scrape = await rp(opggScrape(req.params.championName));
+      Promise.resolve(scrape).then($ => {
+        const tableData = $('body');
+
+        const array = [];
+        const body = tableData.children().each(function (index, element) {
+          array.push($(this));
+        });
+        const scripts = [];
+        const thing = array[0].find('script').each(function (index, element) {
+          scripts.push($(this).html());
+        });
+        const winRate = scripts[4];
+        const pickRate = scripts[5];
+        const gameLengthWinRate = scripts[6];
+
+        console.log(winRate);
+        console.log(pickRate);
+        console.log(gameLengthWinRate);
+        
+      }).catch(error => {
+        console.log("RORO")
+      })
     } catch (error) {
       //TODO
     }
