@@ -45,6 +45,8 @@ router.get("/opgg-scrape/:championName", (req, res) => {
     try {
       const scrape = await rp(opggScrape(req.params.championName));
       Promise.resolve(scrape).then($ => {
+        console.time('opgg-scrape');
+        
         const tableData = $('body');
 
         const array = [];
@@ -55,13 +57,15 @@ router.get("/opgg-scrape/:championName", (req, res) => {
         const thing = array[0].find('script').each(function (index, element) {
           scripts.push($(this).html());
         });
-        const winRate = scripts[4];
-        const pickRate = scripts[5];
-        const gameLengthWinRate = scripts[6];
+        const winRate = scripts[4].content();
+        // const pickRate = scripts[5];
+        // const gameLengthWinRate = scripts[6];
 
-        console.log(winRate);
-        console.log(pickRate);
-        console.log(gameLengthWinRate);
+        res.send(winRate);
+
+        console.timeEnd('opgg-scrape');
+
+        
         
       }).catch(error => {
         console.log("RORO")
