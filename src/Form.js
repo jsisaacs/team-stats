@@ -6,44 +6,56 @@ class Form extends Component {
     super(props);
     
     this.state = ({
-      summonerNameInput: ''
+      formInput: '',
+      gameStatus: false,
     });
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.validateSummonerName = this.validateSummonerName.bind(this);
+    this.validateGameStatus = this.validateGameStatus.bind(this);
   }
 
   handleChange(event) {
     this.setState({
-      summonerNameInput: event.target.value
+      formInput: event.target.value
     });
   }
 
   handleSubmit(event) {
-    //alert('SUBMITTED:' + this.state.summonerNameInput);
-    alert(this.state.summonerNameInput)
-    this.validateSummonerName('na', this.state.summonerNameInput);
+    this.validateGameStatus('na', this.state.formInput);
     event.preventDefault();
   }
 
-  validateSummonerName(region, summonerName) {
-    const summonerInfo = async () => {
+  validateGameStatus(region, summonerName) {
+    const currentMatch = async () => {
       try {
-        const info = await rp({
-          uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
+        const match = await rp({
+          uri: `http://localhost:12344/current-match/${region}/${summonerName}`,
           headers: {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
           },
           json: true
         });
+        
+        if (match.participants !== undefined) {
+          this.setState({
+            gameStatus: true
+          });
+        }
 
-        alert(info);
+        if (match === 404) {
+          this.setState({
+            gameStatus: false
+          })
+        }
+        
+        console.log(this.state);
+
       } catch (error) {
-        alert("ERROR")
+        alert("failure");
       }
     }
-    summonerInfo();
+    currentMatch();
     
     // rp({
     //   uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
