@@ -6,23 +6,31 @@ class Form extends Component {
     super(props);
     
     this.state = ({
-      formInput: '',
+      formSummonerNameInput: '',
+      formRegionInput: 'na',
       gameStatus: false,
     });
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
+    this.handleRegionChange = this.handleRegionChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.validateGameStatus = this.validateGameStatus.bind(this);
   }
 
-  handleChange(event) {
+  handleTextChange(event) {
     this.setState({
-      formInput: event.target.value
+      formSummonerNameInput: event.target.value
+    });
+  }
+
+  handleRegionChange(event) {
+    this.setState({
+      formRegionInput: event.target.value
     });
   }
 
   handleSubmit(event) {
-    this.validateGameStatus('na', this.state.formInput);
+    this.validateGameStatus(this.state.formRegionInput, this.state.formSummonerNameInput);
     event.preventDefault();
   }
 
@@ -56,34 +64,39 @@ class Form extends Component {
       }
     }
     currentMatch();
-    
-    // rp({
-    //   uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
-    //   headers: {
-    //     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-    //   },
-    //   json: true
-    // })
-    //   .then(response => {
-    //     alert("SUCCESS");
-    //   })
-    //   .error(error => {
-    //     alert("ERROR")
-    //   })
-
-    
   }
   
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
-          Summoner Username:
+          Summoner Name:
           <input 
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            value={this.state.formSummonerNameInput}
+            onChange={this.handleTextChange}
+            required
           />
+        </label>
+        <label>
+          Region:
+          <select 
+            value={this.state.formRegionInput}
+            onChange={this.handleRegionChange}
+            required
+          >
+            <option value="na">North America</option>
+            <option value="eune">Europe</option>
+            <option value="kr">Korea</option>
+            <option value="euw">Europe West</option>
+            <option value="br">Brazil</option>
+            <option value="lan">Latin America North</option>
+            <option value="las">Latin America South</option> 
+            <option value="oce">Oceania</option>
+            <option value="ru">Russia</option>
+            <option value="tr">Turkey</option>
+            <option value="jp">Japan</option>
+          </select>
         </label>
         <input type="submit" value="Submit" />
       </form>
