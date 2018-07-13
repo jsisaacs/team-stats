@@ -14,7 +14,7 @@ class Form extends Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleRegionChange = this.handleRegionChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.validateGameStatus = this.validateGameStatus.bind(this);
+    this.loadGame = this.loadGame.bind(this);
   }
 
   handleTextChange(event) {
@@ -29,41 +29,40 @@ class Form extends Component {
     });
   }
 
-  handleSubmit(event) {
-    this.validateGameStatus(this.state.formRegionInput, this.state.formSummonerNameInput);
+  async handleSubmit(event) {
     event.preventDefault();
+
+    const region = this.state.formRegionInput;
+    const summonerName = this.state.formSummonerNameInput;
+    
+    const game = await this.loadGame(region, summonerName);
+
+    if (game.participants !== undefined) {
+      this.setState({
+        gameStatus: true
+      })
+    } else {
+      this.setState({
+        gameStatus: false
+      })
+    }  
+    this.props.formSubmit(this.state);
+    
+    this.setState({
+      formSummonerNameInput: '',
+      formRegionInput: 'na',
+      gameStatus: false
+    });
   }
 
-  validateGameStatus(region, summonerName) {
-    const currentMatch = async () => {
-      try {
-        const match = await rp({
-          uri: `http://localhost:12344/current-match/${region}/${summonerName}`,
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-          },
-          json: true
-        });
-        
-        if (match.participants !== undefined) {
-          this.setState({
-            gameStatus: true
-          });
-        }
-
-        if (match === 404) {
-          this.setState({
-            gameStatus: false
-          })
-        }
-        
-        console.log(this.state);
-
-      } catch (error) {
-        alert("failure");
-      }
-    }
-    currentMatch();
+  async loadGame(region, summonerName) {
+    return await rp({
+      uri: `http://localhost:12344/current-match/${region}/${summonerName}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+      },
+      json: true
+    });
   }
   
   render() {
