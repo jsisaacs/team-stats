@@ -4,21 +4,17 @@ import Form from './Form'
 
 class App extends Component {
   state = {
-    fields: {}
+    form: {}
   }
   
-  formSubmit = (fields) => {
-    this.setState({ fields });
-    console.log('App component got: ', fields);
+  formSubmit = (form) => {
+    this.setState({ form });
   }
   
   render() {
     return (
       <div>
-        <Form formSubmit={fields => this.formSubmit(fields)}/>
-        <p>
-          {JSON.stringify(this.state.fields, null, 2)}
-        </p>
+        <Form formSubmit={form => this.formSubmit(form)} />
       </div>
     )
   }
