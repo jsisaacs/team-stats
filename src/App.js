@@ -7,7 +7,6 @@ import SummonerError from './SummonerError'
 class App extends Component {
   state = {
     form: {},
-    loaded: false
   }
   
   formSubmit = (form) => {
@@ -21,9 +20,11 @@ class App extends Component {
       <div>
         <Form formSubmit={form => this.formSubmit(form)} />
         {
-        
           inGame 
-            ? <SummonerOverview name={this.state.form.formSummonerNameInput} />
+            ? <SummonerOverview 
+                name={this.state.form.formSummonerNameInput}
+                region={this.state.form.formRegionInput}
+              />
             : <SummonerError />
         }
         <p>
