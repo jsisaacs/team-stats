@@ -24,6 +24,7 @@ class App extends Component {
             ? <SummonerOverview 
                 name={this.state.form.formSummonerNameInput}
                 region={this.state.form.formRegionInput}
+                participants={this.state.form.participants}
               />
             : <SummonerError />
         }
