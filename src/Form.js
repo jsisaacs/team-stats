@@ -39,11 +39,13 @@ class Form extends Component {
 
     if (game.participants !== undefined) {
       this.setState({
-        gameStatus: true
+        gameStatus: true,
+        participants: game.participants
       })
     } else {
       this.setState({
-        gameStatus: false
+        gameStatus: false,
+        participants: null
       })
     }  
     this.props.formSubmit(this.state);
