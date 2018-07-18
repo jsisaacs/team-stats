@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import rp from 'request-promise' 
 
 class SummonerOverview extends Component {
   state = {
@@ -6,8 +7,21 @@ class SummonerOverview extends Component {
     participants: this.props.participants
   }
 
-  async getBadges(region, summonerName) {
-    //TODO
+  async componentDidMount() {
+    // await this.getBadges("na", "Shiphtur", "Talon")
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+  }
+
+  async getBadges(region, summonerName, championName) {
+    return await rp({
+      uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+      },
+      json: true
+    });
   }
 
   async getChampionStatistics(region, summonerName, championName) {
@@ -19,10 +33,6 @@ class SummonerOverview extends Component {
   }
 
   async getChampionHistory(championName) {
-    //TODO
-  }
-
-  componentDidMount() {
     //TODO
   }
 

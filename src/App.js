@@ -6,11 +6,22 @@ import SummonerError from './SummonerError'
 
 class App extends Component {
   state = {
-    form: {},
+    form: {
+      formSummonerNameInput: '',
+      formRegionInput: 'na',
+      gameStatus: false,
+      participants: {
+        team1: [],
+        team2: []
+      }
+    }
   }
   
   formSubmit = (form) => {
-    this.setState({ form });
+    this.setState({
+       form
+    });
+    console.log(this.state);
   }
   
   render() {
