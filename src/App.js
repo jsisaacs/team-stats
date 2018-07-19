@@ -14,18 +14,40 @@ class App extends Component {
         team1: [],
         team2: []
       }
-    }
+    },
   }
   
-  formSubmit = (form) => {
-    this.setState({
-       form
-    });
+  formSubmit = (input) => {
+    if (input.gameStatus === true) {
+      this.setState({
+        form: {
+          formSummonerNameInput: input.formSummonerNameInput,
+          formRegionInput: input.formRegionInput,
+        },
+        gameStatus: input.gameStatus,
+        participants: {
+          team1: input.participants.team1,
+          team2: input.participants.team2
+        }
+      });
+    } else {
+      this.setState({
+        form: {
+          formSummonerNameInput: input.formSummonerNameInput,
+          formRegionInput: input.formRegionInput,
+        },
+        gameStatus: input.gameStatus,
+        participants: {
+          team1: [],
+          team2: []
+        }
+      });
+    }
     console.log(this.state);
   }
   
   render() {
-    const inGame = this.state.form.gameStatus;
+    const inGame = this.state.gameStatus;
     
     return (
       <div>
@@ -35,7 +57,7 @@ class App extends Component {
             ? <SummonerOverview 
                 name={this.state.form.formSummonerNameInput}
                 region={this.state.form.formRegionInput}
-                participants={this.state.form.participants}
+                participants={this.state.participants}
               />
             : <SummonerError />
         }

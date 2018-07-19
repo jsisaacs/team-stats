@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import rp from 'request-promise' 
+//import rp from 'request-promise' 
 
 class SummonerOverview extends Component {
   state = {
-    test: this.props.name,
-    participants: this.props.participants
+    name: this.props.name,
+    region: this.props.region,
+    participants: {
+      team1: this.props.participants.team1,
+      team2: this.props.participants.team2
+    }
   }
 
   async componentDidMount() {
@@ -12,16 +16,17 @@ class SummonerOverview extends Component {
     //   .then(res => {
     //     console.log(res);
     //   })
+    console.log(this.state);
   }
 
   async getBadges(region, summonerName, championName) {
-    return await rp({
-      uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-      },
-      json: true
-    });
+    // return await rp({
+    //   uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
+    //   headers: {
+    //     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+    //   },
+    //   json: true
+    // });
   }
 
   async getChampionStatistics(region, summonerName, championName) {
@@ -39,8 +44,12 @@ class SummonerOverview extends Component {
   async componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       this.setState({
-        test: this.props.name,
-        participants: this.props.participants
+        name: this.props.name,
+        region: this.props.region,
+        participants: {
+          team1: this.props.participants.team1,
+          team2: this.props.participants.team2
+        }
       })
     }
   }
@@ -48,7 +57,7 @@ class SummonerOverview extends Component {
   render() {
     return (
       <div>
-        {this.state.test}
+        {this.state.name}
       </div>
     )
   }
