@@ -39,17 +39,6 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
 
       const currentGame = await kayn.CurrentGame.by.summonerID(id).region(req.params.region);
 
-      ////
-      // const getChampion = champions.filter(champion => {
-      //   //return champion.id === championId;
-      //   if (champion.id === 68) {
-      //     console.log(champion);
-      //   }
-      // });
-
-      //console.log(champions);
-      ////
-
       if (currentGame.gameQueueConfigId === 420) {
         currentGame.participants.map(participant => {
           const summoner = {

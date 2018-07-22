@@ -61,9 +61,9 @@ class App extends Component {
               />
             : <SummonerError />
         }
-        <p>
+        {/* <p>
           {JSON.stringify(this.state, null, 2)}
-        </p>
+        </p> */}
       </div>
     )
   }

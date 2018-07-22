@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Teammate from './Teammate'
-//import rp from 'request-promise' 
+import rp from 'request-promise' 
+const champions = require("lol-champions");
 
 class SummonerOverview extends Component {
   state = {
@@ -13,34 +14,17 @@ class SummonerOverview extends Component {
   }
 
   async componentDidMount() {
-    // await this.getBadges("na", "Shiphtur", "Talon")
-    //   .then(res => {
-    //     console.log(res);
-    //   })
+
   }
 
-  
-
-  async getBadges(region, summonerName, championName) {
-    // return await rp({
-    //   uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
-    //   headers: {
-    //     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-    //   },
-    //   json: true
-    // });
-  }
-
-  async getChampionStatistics(region, summonerName, championName) {
-    //
-  }
-  
   async getSummonerInfo(region, summonerName) {
-    
-  }
-
-  async getChampionHistory(championName) {
-    //TODO
+    return await rp({
+      uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+      },
+      json: true
+    });
   }
 
   async componentDidUpdate(prevProps) {
@@ -57,11 +41,24 @@ class SummonerOverview extends Component {
   }
 
   render() {
-    //const team1 = 
     return (
       <div>
-        {this.state.name}
-        {}
+        <h1>Team 1</h1>
+        {this.state.participants.team1.map(teammate => {
+          return <Teammate 
+                  key={teammate.summonerId}
+                  summonerName={teammate.summonerName}
+                  championName={teammate.championName}
+                 />
+        })}
+        <h1>Team 2</h1>
+        {this.state.participants.team2.map(teammate => {
+          return <Teammate 
+                  key={teammate.summonerId}
+                  summonerName={teammate.summonerName}
+                  championName={teammate.championName}
+                 />
+        })}
       </div>
     )
   }
