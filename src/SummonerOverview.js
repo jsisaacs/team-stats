@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Teammate from './Teammate'
 //import rp from 'request-promise' 
 
 class SummonerOverview extends Component {
@@ -16,8 +17,9 @@ class SummonerOverview extends Component {
     //   .then(res => {
     //     console.log(res);
     //   })
-    console.log(this.state);
   }
+
+  
 
   async getBadges(region, summonerName, championName) {
     // return await rp({
@@ -30,11 +32,11 @@ class SummonerOverview extends Component {
   }
 
   async getChampionStatistics(region, summonerName, championName) {
-    //TODO
+    //
   }
   
   async getSummonerInfo(region, summonerName) {
-    //TODO
+    
   }
 
   async getChampionHistory(championName) {
@@ -55,9 +57,11 @@ class SummonerOverview extends Component {
   }
 
   render() {
+    //const team1 = 
     return (
       <div>
         {this.state.name}
+        {}
       </div>
     )
   }

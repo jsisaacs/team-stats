@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Kayn } = require('kayn');
+const champions = require("lol-champions");
 
 const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
   debugOptions: {
@@ -13,6 +14,13 @@ const kayn = Kayn(process.env.RIOT_LOL_API_KEY)({
     delayBeforeRetry: 1000,
   },
 });
+
+const getChampionName = championId => {
+  const getChampion = champions.filter(champion => {
+    return champion.key === championId;
+  });
+  return getChampion[0].name; 
+}
 
 /*
   Returns the participants of the current match, their championId, and the game's platformId. If the summoner isn't in a game, returns 404.
@@ -31,12 +39,24 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
 
       const currentGame = await kayn.CurrentGame.by.summonerID(id).region(req.params.region);
 
+      ////
+      // const getChampion = champions.filter(champion => {
+      //   //return champion.id === championId;
+      //   if (champion.id === 68) {
+      //     console.log(champion);
+      //   }
+      // });
+
+      //console.log(champions);
+      ////
+
       if (currentGame.gameQueueConfigId === 420) {
         currentGame.participants.map(participant => {
           const summoner = {
             summonerName: participant.summonerName,
             summonerId: participant.summonerId,
-            championId: participant.championId
+            championId: participant.championId,
+            championName: getChampionName(String(participant.championId))
           }
 
           if (participant.teamId === 100) {
