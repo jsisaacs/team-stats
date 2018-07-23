@@ -1,7 +1,14 @@
-import React, { Component } from 'react'
-import Form from './Form'
-import SummonerOverview from './SummonerOverview'
-import SummonerError from './SummonerError'
+import React, { Component } from 'react';
+import Form from './Form';
+import SummonerOverview from './SummonerOverview';
+import SummonerError from './SummonerError';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  // margin: 0 auto;
+  // max-width: 75em;
+  // background: rgb(243, 243, 247);
+`;
 
 class App extends Component {
   state = {
@@ -49,7 +56,8 @@ class App extends Component {
     const inGame = this.state.gameStatus;
     
     return (
-      <div>
+
+      <Wrapper>
         <Form formSubmit={form => this.formSubmit(form)} />
         {
           inGame 
@@ -60,7 +68,7 @@ class App extends Component {
               />
             : <SummonerError />
         }
-      </div>
+      </Wrapper>
     )
   }
 }

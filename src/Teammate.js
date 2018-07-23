@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const Card = styled.div``
-const Image = styled.img``
-const Summoner = styled.h3``
-const Champion = styled.p``
+const Card = styled.div`
+  background: rgb(255, 255, 255);
+  transition: 0.3s;
+  width: 275px;
+  border-radius: 10px;
+`;
+const Image = styled.img`
+  border-radius: 50%;
+  width: 45px;
+  height: auto;
+  justify-content: flex-start;
+`;
+const Summoner = styled.h3`
+  display: inline-block;
+  justify-content: flex-end;
+`;
+const Champion = styled.p`
+  //justify-content: flex-end;
+`;
 
 class Teammate extends Component {
   render() {

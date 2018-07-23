@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Teammate from './Teammate'
 import rp from 'request-promise' 
-const champions = require("lol-champions");
 
 class SummonerOverview extends Component {
   state = {
