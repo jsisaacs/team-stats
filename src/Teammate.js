@@ -1,7 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import styled from 'styled-components';
+
+const Card = styled.div``
+const Image = styled.img``
+const Summoner = styled.h3``
+const Champion = styled.p``
 
 class Teammate extends Component {
   render() {
+
     let championNameConversions = new Map();
     championNameConversions.set("Aurelion Sol",  "AurelionSol");
     championNameConversions.set("Cho'Gath", "Chogath");
@@ -34,12 +41,11 @@ class Teammate extends Component {
     }
 
     return (
-      <div>
-        <img src={championImage} alt={this.props.championName}/>
-        <h3>{this.props.summonerName}</h3>
-        <p>{this.props.championName}</p>
-        <hr/>
-      </div>
+      <Card>
+        <Image src={championImage} alt={this.props.championName} />
+        <Summoner>{this.props.summonerName}</Summoner>
+        <Champion>{this.props.championName}</Champion>
+      </Card>
     )
   }
 }
