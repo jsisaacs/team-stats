@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Teammate from './Teammate';
 import rp from 'request-promise';
+import ExpandedTeammate from './ExpandedTeammate';
 
 class SummonerOverview extends Component {
   state = {
@@ -44,6 +45,19 @@ class SummonerOverview extends Component {
       <div>
         <h1>Team 1</h1>
         {this.state.participants.team1.map(teammate => {
+          const expanded = teammate.expanded;
+          if (expanded) {
+            console.log("EXPANDED")
+          } else {
+            console.log("NOT EXPANDED")
+          }
+          // expanded 
+          //   ?  <ExpandedTeammate />
+          //   : <Teammate 
+          //       key={teammate.summonerId}
+          //       summonerName={teammate.summonerName}
+          //       championName={teammate.championName}
+          //     />
           return <Teammate 
                   key={teammate.summonerId}
                   summonerName={teammate.summonerName}

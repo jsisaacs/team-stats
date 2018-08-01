@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+const Expand = styled.button``;
+
 const Card = styled.div`
   background: rgb(255, 255, 255);
   transition: 0.3s;
@@ -22,6 +24,11 @@ const Champion = styled.p`
 `;
 
 class Teammate extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+  
   render() {
 
     let championNameConversions = new Map();
@@ -50,17 +57,18 @@ class Teammate extends Component {
     if (championNameConversions.get(this.props.championName)) {
         championName = championNameConversions.get(this.props.championName);
         championImage = `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championName}.png`;
-        console.log(championImage);
     } else {
       championImage = `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${this.props.championName}.png`;
     }
 
     return (
-      <Card>
-        <Image src={championImage} alt={this.props.championName} />
-        <Summoner>{this.props.summonerName}</Summoner>
-        <Champion>{this.props.championName}</Champion>
-      </Card>
+      <Expand onClick={this.handleClick}>
+        <Card>
+          <Image src={championImage} alt={this.props.championName} />
+          <Summoner>{this.props.summonerName}</Summoner>
+          <Champion>{this.props.championName}</Champion>
+        </Card>
+      </Expand>
     )
   }
 }
