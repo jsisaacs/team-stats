@@ -45,7 +45,8 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
             summonerName: participant.summonerName,
             summonerId: participant.summonerId,
             championId: participant.championId,
-            championName: getChampionName(String(participant.championId))
+            championName: getChampionName(String(participant.championId)),
+            expanded: false
           }
 
           if (participant.teamId === 100) {

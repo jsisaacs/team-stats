@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import Teammate from './Teammate'
-import rp from 'request-promise' 
+import React, { Component } from 'react';
+import Teammate from './Teammate';
+import rp from 'request-promise';
 
 class SummonerOverview extends Component {
   state = {
@@ -12,8 +12,8 @@ class SummonerOverview extends Component {
     }
   }
 
-  async componentDidMount() {
-
+  componentDidMount() {
+    console.log(this.state);
   }
 
   async getSummonerInfo(region, summonerName) {

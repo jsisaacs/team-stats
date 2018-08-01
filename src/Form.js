@@ -1,5 +1,12 @@
-import React, { Component } from 'react'
-import rp from 'request-promise' 
+import React, { Component } from 'react';
+import rp from 'request-promise';
+import styled from 'styled-components'; 
+
+const StyledForm = styled.form``;
+const SummonerLabel = styled.label``;
+const SummonerInput = styled.input``;
+const RegionLabel = styled.label``;
+const SubmitButton = styled.input``;
 
 class Form extends Component {
   constructor(props) {
@@ -69,17 +76,17 @@ class Form extends Component {
   
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
+      <StyledForm onSubmit={this.handleSubmit}>
+        <SummonerLabel>
           Summoner Name:
-          <input 
+          <SummonerInput 
             type="text"
             value={this.state.formSummonerNameInput}
             onChange={this.handleTextChange}
             required
           />
-        </label>
-        <label>
+        </SummonerLabel>
+        <RegionLabel>
           Region:
           <select 
             value={this.state.formRegionInput}
@@ -98,9 +105,9 @@ class Form extends Component {
             <option value="tr">Turkey</option>
             <option value="jp">Japan</option>
           </select>
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+        </RegionLabel>
+        <SubmitButton type="submit" value="Submit" />
+      </StyledForm>
     )
   }
 }

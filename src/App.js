@@ -49,14 +49,11 @@ class App extends Component {
         }
       });
     }
-    console.log(this.state);
   }
   
   render() {
     const inGame = this.state.gameStatus;
-    
     return (
-
       <Wrapper>
         <Form formSubmit={form => this.formSubmit(form)} />
         {
