@@ -16,7 +16,7 @@ class Form extends Component {
       formSummonerNameInput: '',
       formRegionInput: 'na',
       gameStatus: false,
-    });
+    }); 
 
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleRegionChange = this.handleRegionChange.bind(this);

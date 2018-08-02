@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const Expand = styled.button``;
+const Expand = styled.a``;
 
 const Card = styled.div`
   background: rgb(255, 255, 255);
@@ -28,9 +28,12 @@ class Teammate extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
+
+  handleClick() {
+    //this.props.changeExpansion(this.props.summonerName);
+  }
   
   render() {
-
     let championNameConversions = new Map();
     championNameConversions.set("Aurelion Sol",  "AurelionSol");
     championNameConversions.set("Cho'Gath", "Chogath");
@@ -52,7 +55,7 @@ class Teammate extends Component {
 
     let championName = "";
     let championImage = "";
-    const version = "8.14.1";
+    const version = "8.15.1";
 
     if (championNameConversions.get(this.props.championName)) {
         championName = championNameConversions.get(this.props.championName);
@@ -62,7 +65,7 @@ class Teammate extends Component {
     }
 
     return (
-      <Expand onClick={this.handleClick}>
+      <Expand>
         <Card>
           <Image src={championImage} alt={this.props.championName} />
           <Summoner>{this.props.summonerName}</Summoner>

@@ -40,6 +40,12 @@ class SummonerOverview extends Component {
     }
   }
 
+  changeExpansion(summonerName) {
+    //make a copy of team1 and team2 
+    //iterate through both, checking if summonerName is there
+    //when you find summonerName, set the teammate's  expanded field to !expanded
+  }
+
   render() {
     return (
       <div>
