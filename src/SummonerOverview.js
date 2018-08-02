@@ -44,6 +44,28 @@ class SummonerOverview extends Component {
     //make a copy of team1 and team2 
     //iterate through both, checking if summonerName is there
     //when you find summonerName, set the teammate's  expanded field to !expanded
+    console.log(summonerName);
+    const team1 = this.state.participants.team1.slice(0);
+    const team2 = this.state.participants.team2.slice(0);
+
+    team1.forEach(teammate => {
+      if (summonerName === teammate.summonerName) {
+        teammate.expanded = !teammate.expanded;
+      }
+    });
+
+    team2.forEach(teammate => {
+      if (summonerName === teammate.summonerName) {
+        teammate.expanded = !teammate.expanded;
+      }
+    });
+
+    this.setState({
+      participants: {
+        team1: team1,
+        team2: team2
+      }
+    })
   }
 
   render() {
@@ -52,31 +74,40 @@ class SummonerOverview extends Component {
         <h1>Team 1</h1>
         {this.state.participants.team1.map(teammate => {
           const expanded = teammate.expanded;
-          if (expanded) {
-            console.log("EXPANDED")
+          if (!expanded) {
+            return <Teammate
+                    changeExpansion={input => this.changeExpansion(input)} 
+                    key={teammate.summonerId}
+                    summonerName={teammate.summonerName}
+                    championName={teammate.championName}
+                   /> 
           } else {
-            console.log("NOT EXPANDED")
+            return <ExpandedTeammate 
+                    key={teammate.summonerId}
+                   />
           }
-          // expanded 
-          //   ?  <ExpandedTeammate />
-          //   : <Teammate 
-          //       key={teammate.summonerId}
-          //       summonerName={teammate.summonerName}
-          //       championName={teammate.championName}
-          //     />
-          return <Teammate 
-                  key={teammate.summonerId}
-                  summonerName={teammate.summonerName}
-                  championName={teammate.championName}
-                 />
         })}
         <h1>Team 2</h1>
         {this.state.participants.team2.map(teammate => {
-          return <Teammate 
-                  key={teammate.summonerId}
-                  summonerName={teammate.summonerName}
-                  championName={teammate.championName}
-                 />
+          const expanded = teammate.expanded;
+          if (!expanded) {
+            return <Teammate
+                    changeExpansion={input => this.changeExpansion(input)} 
+                    key={teammate.summonerId}
+                    summonerName={teammate.summonerName}
+                    championName={teammate.championName}
+                   /> 
+          } else {
+            return <ExpandedTeammate 
+                    key={teammate.summonerId}
+                   />
+          }
+          // return <Teammate 
+          //         changeExpansion={input => this.changeExpansion(input)}
+          //         key={teammate.summonerId}
+          //         summonerName={teammate.summonerName}
+          //         championName={teammate.championName}
+          //        />
         })}
       </div>
     )

@@ -30,7 +30,7 @@ class Teammate extends Component {
   }
 
   handleClick() {
-    //this.props.changeExpansion(this.props.summonerName);
+    this.props.changeExpansion(this.props.summonerName);
   }
   
   render() {
@@ -65,7 +65,7 @@ class Teammate extends Component {
     }
 
     return (
-      <Expand>
+      <Expand onClick={this.handleClick}>
         <Card>
           <Image src={championImage} alt={this.props.championName} />
           <Summoner>{this.props.summonerName}</Summoner>
