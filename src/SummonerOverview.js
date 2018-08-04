@@ -41,10 +41,6 @@ class SummonerOverview extends Component {
   }
 
   changeExpansion(summonerName) {
-    //make a copy of team1 and team2 
-    //iterate through both, checking if summonerName is there
-    //when you find summonerName, set the teammate's  expanded field to !expanded
-    console.log(summonerName);
     const team1 = this.state.participants.team1.slice(0);
     const team2 = this.state.participants.team2.slice(0);
 
@@ -84,6 +80,9 @@ class SummonerOverview extends Component {
           } else {
             return <ExpandedTeammate 
                     key={teammate.summonerId}
+                    changeExpansion={input => this.changeExpansion(input)}
+                    summonerName={teammate.summonerName}
+                    championName={teammate.championName}
                    />
           }
         })}
@@ -92,22 +91,19 @@ class SummonerOverview extends Component {
           const expanded = teammate.expanded;
           if (!expanded) {
             return <Teammate
-                    changeExpansion={input => this.changeExpansion(input)} 
                     key={teammate.summonerId}
+                    changeExpansion={input => this.changeExpansion(input)} 
                     summonerName={teammate.summonerName}
                     championName={teammate.championName}
                    /> 
           } else {
             return <ExpandedTeammate 
                     key={teammate.summonerId}
+                    changeExpansion={input => this.changeExpansion(input)}
+                    summonerName={teammate.summonerName}
+                    championName={teammate.championName}
                    />
           }
-          // return <Teammate 
-          //         changeExpansion={input => this.changeExpansion(input)}
-          //         key={teammate.summonerId}
-          //         summonerName={teammate.summonerName}
-          //         championName={teammate.championName}
-          //        />
         })}
       </div>
     )
