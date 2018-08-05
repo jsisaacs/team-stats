@@ -19,7 +19,7 @@ const Modal = styled.div`
 
 const Content = styled.div`
   background-color: #fefefe;
-  border-radius: 10px;
+  border-radius: 4px;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
@@ -46,13 +46,13 @@ class ExpandedTeammate extends Component {
   }
 
   componentDidMount() {
-    document.body.style.webkitFilter = 'blur(5px)';
-    document.body.style.filter = 'blur(5px)';
+    //document.body.style.webkitFilter = 'blur(5px)';
+    //document.body.style.filter = 'blur(5px)';
   }
 
   componentWillUnmount() {
-    document.body.style.webkitFilter = '';
-    document.body.style.filter = '';
+    // document.body.style.webkitFilter = '';
+    // document.body.style.filter = '';
   }
 
   handleClick() {

@@ -11,7 +11,7 @@ const Card = styled.div.attrs({
   width: 325px;
   height: 100px;
   margin: 15px;
-  box-shadow: 2.5px 5px 15px grey;
+  box-shadow: 0 0 20px grey;
 `;
 
 const Image = styled.img`

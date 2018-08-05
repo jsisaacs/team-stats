@@ -47,7 +47,26 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
             summonerId: participant.summonerId,
             championId: participant.championId,
             championName: getChampionName(String(participant.championId)),
-            expanded: false
+            expanded: false,
+            championStatistics: {
+              wins: null,
+              losses: null,
+              kda: {
+                kills: null,
+                deaths: null,
+                assists: null
+              },
+              gold: null,
+              cs: null,
+              maxKills: null,
+              maxDeaths: null,
+              averageDamageDealt: null,
+              averageDamageTaken: null,
+              doubleKill: null,
+              tripleKill: null,
+              quadraKill: null,
+              pentaKill: null
+            }
           }
 
           if (participant.teamId === 100) {
