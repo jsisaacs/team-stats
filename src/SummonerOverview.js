@@ -61,7 +61,7 @@ class SummonerOverview extends Component {
         team1: team1,
         team2: team2
       }
-    })
+    });
   }
 
   render() {

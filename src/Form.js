@@ -2,11 +2,19 @@ import React, { Component } from 'react';
 import rp from 'request-promise';
 import styled from 'styled-components'; 
 
-const StyledForm = styled.form``;
-const SummonerLabel = styled.label``;
-const SummonerInput = styled.input``;
-const RegionLabel = styled.label``;
-const SubmitButton = styled.input``;
+const Wrapper = styled.div`
+  display: block;
+  text-align: center;
+`;
+const StyledForm = styled.form`
+
+`;
+const SummonerInput = styled.input`
+
+`;
+const SubmitButton = styled.input`
+
+`;
 
 class Form extends Component {
   constructor(props) {
@@ -76,38 +84,35 @@ class Form extends Component {
   
   render() {
     return (
-      <StyledForm onSubmit={this.handleSubmit}>
-        <SummonerLabel>
-          Summoner Name:
-          <SummonerInput 
-            type="text"
-            value={this.state.formSummonerNameInput}
-            onChange={this.handleTextChange}
-            required
-          />
-        </SummonerLabel>
-        <RegionLabel>
-          Region:
-          <select 
-            value={this.state.formRegionInput}
-            onChange={this.handleRegionChange}
-            required
-          >
-            <option value="na">North America</option>
-            <option value="eune">Europe</option>
-            <option value="kr">Korea</option>
-            <option value="euw">Europe West</option>
-            <option value="br">Brazil</option>
-            <option value="lan">Latin America North</option>
-            <option value="las">Latin America South</option> 
-            <option value="oce">Oceania</option>
-            <option value="ru">Russia</option>
-            <option value="tr">Turkey</option>
-            <option value="jp">Japan</option>
-          </select>
-        </RegionLabel>
-        <SubmitButton type="submit" value="Submit" />
-      </StyledForm>
+      <Wrapper>
+        <StyledForm onSubmit={this.handleSubmit}>
+            <select 
+              value={this.state.formRegionInput}
+              onChange={this.handleRegionChange}
+              required
+            >
+              <option value="na">North America</option>
+              <option value="eune">Europe</option>
+              <option value="kr">Korea</option>
+              <option value="euw">Europe West</option>
+              <option value="br">Brazil</option>
+              <option value="lan">Latin America North</option>
+              <option value="las">Latin America South</option> 
+              <option value="oce">Oceania</option>
+              <option value="ru">Russia</option>
+              <option value="tr">Turkey</option>
+              <option value="jp">Japan</option>
+            </select>
+            <SummonerInput 
+              type="text"
+              placeholder="Provide a summoner name"
+              value={this.state.formSummonerNameInput}
+              onChange={this.handleTextChange}
+              required
+            />
+          <SubmitButton type="submit" value="Submit" />
+        </StyledForm>
+      </Wrapper>
     )
   }
 }

@@ -1,26 +1,32 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const Expand = styled.a``;
-
 const Card = styled.div`
-  background: rgb(255, 255, 255);
-  transition: 0.3s;
-  width: 275px;
-  border-radius: 10px;
+  background: salmon;
+  border-radius: 4px; 
+  width: 325px;
+  height: 100px;
+  margin: 15px;
 `;
 const Image = styled.img`
   border-radius: 50%;
-  width: 45px;
+  width: 70px;
   height: auto;
-  justify-content: flex-start;
+  margin: 15px 15px 15px 15px;
+  float: left;
+`;
+const Text = styled.div`
+  float: left;
+  padding-top: 7px;
+  padding-right: 15px;
 `;
 const Summoner = styled.h3`
-  display: inline-block;
-  justify-content: flex-end;
+  color: white;
 `;
 const Champion = styled.p`
-  //justify-content: flex-end;
+  text-align: left;
+  margin-top:-10px;
+  color: white;
 `;
 
 class Teammate extends Component {
@@ -65,13 +71,13 @@ class Teammate extends Component {
     }
 
     return (
-      <Expand onClick={this.handleClick}>
-        <Card>
+        <Card onClick={this.handleClick}>
           <Image src={championImage} alt={this.props.championName} />
-          <Summoner>{this.props.summonerName}</Summoner>
-          <Champion>{this.props.championName}</Champion>
+          <Text>
+            <Summoner>{this.props.summonerName}</Summoner>
+            <Champion>{this.props.championName}</Champion>
+          </Text>
         </Card>
-      </Expand>
     )
   }
 }

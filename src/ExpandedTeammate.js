@@ -14,14 +14,18 @@ const Modal = styled.div`
   overflow: auto;
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.4);
-  backdrop-filter: blur(200px);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 `;
 const Content = styled.div`
   background-color: #fefefe;
+  border-radius: 10px;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+
+  &:not()
 `;
 const CloseButton = styled.span`
   color: #aaaaaa;
@@ -42,13 +46,23 @@ class ExpandedTeammate extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    document.body.style.webkitFilter = 'blur(5px)';
+    document.body.style.filter = 'blur(5px)';
+  }
+
+  componentWillUnmount() {
+    document.body.style.webkitFilter = '';
+    document.body.style.filter = '';
+  }
+
   handleClick() {
     this.props.changeExpansion(this.props.summonerName);
   }
   
   render() {
     return (
-      <Modal>
+      <Modal className="modal">
         <Content>
           <CloseButton onClick={this.handleClick}>&times;</CloseButton>
           <p>This is some text</p>
