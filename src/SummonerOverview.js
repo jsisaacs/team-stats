@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Teammate from './Teammate';
 import rp from 'request-promise';
 import ExpandedTeammate from './ExpandedTeammate';
+
+const ContainerOne = styled.div`
+  max-width: 400px;
+  float: left;
+`;
+
+const ContainerTwo = styled.div`
+  max-width: 400px;
+  float: right;
+`;
 
 class SummonerOverview extends Component {
   state = {
@@ -80,11 +91,19 @@ class SummonerOverview extends Component {
     }
   }
 
+  setTeamTitle(teamCode) {
+    if (teamCode === 100) {
+      return "Red";
+    } else {
+      return "Blue";
+    }
+  }
+
   render() {
     return (
       <div>
-        <div>
-          <h1>Team 1</h1>
+        <ContainerOne>
+          <h1>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</h1>
           {this.state.participants.team1.map(teammate => {
             const expanded = teammate.expanded;
             if (!expanded) {
@@ -105,9 +124,9 @@ class SummonerOverview extends Component {
                     />
             }
           })}
-        </div>
-        <div>
-          <h1>Team 2</h1>
+        </ContainerOne>
+        <ContainerTwo>
+          <h1>{`${this.setTeamTitle(this.state.participants.team2[0].team)} Team`}</h1>
           {this.state.participants.team2.map(teammate => {
             const expanded = teammate.expanded;
             if (!expanded) {
@@ -128,7 +147,7 @@ class SummonerOverview extends Component {
                     />
             }
           })}
-        </div>
+        </ContainerTwo>
       </div>
     )
   }

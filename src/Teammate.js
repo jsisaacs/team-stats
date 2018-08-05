@@ -6,11 +6,12 @@ const Card = styled.div.attrs({
   float: props => props.side
 })`
   background: ${props => props.background};
+  float: ${props => props.float};
   border-radius: 4px; 
   width: 325px;
   height: 100px;
   margin: 15px;
-  float: ${props => props.float};
+  box-shadow: 2.5px 5px 15px grey;
 `;
 
 const Image = styled.img`
@@ -29,12 +30,14 @@ const Text = styled.div`
 
 const Summoner = styled.h3`
   color: white;
+  font-family: 'Josefin Sans', sans-serif;
 `;
 
 const Champion = styled.p`
   text-align: left;
   margin-top:-10px;
   color: white;
+  font-family: 'Asap', sans-serif;
 `;
 
 class Teammate extends Component {
@@ -42,8 +45,6 @@ class Teammate extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
-
-  
 
   handleClick() {
     this.props.changeExpansion(this.props.summonerName);
