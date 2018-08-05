@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import rp from 'request-promise';
 
 const Modal = styled.div`
   display: block;
@@ -17,6 +16,7 @@ const Modal = styled.div`
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 `;
+
 const Content = styled.div`
   background-color: #fefefe;
   border-radius: 10px;
@@ -24,9 +24,8 @@ const Content = styled.div`
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
-
-  &:not()
 `;
+
 const CloseButton = styled.span`
   color: #aaaaaa;
   float: right;

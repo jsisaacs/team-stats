@@ -42,6 +42,7 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
       if (currentGame.gameQueueConfigId === 420) {
         currentGame.participants.map(participant => {
           const summoner = {
+            team: participant.teamId,
             summonerName: participant.summonerName,
             summonerId: participant.summonerId,
             championId: participant.championId,

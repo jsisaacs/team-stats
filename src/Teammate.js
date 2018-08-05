@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const Card = styled.div`
-  background: salmon;
+const Card = styled.div.attrs({
+  background: props => props.team,
+  float: props => props.side
+})`
+  background: ${props => props.background};
   border-radius: 4px; 
   width: 325px;
   height: 100px;
   margin: 15px;
+  float: ${props => props.float};
 `;
+
 const Image = styled.img`
   border-radius: 50%;
   width: 70px;
@@ -15,14 +20,17 @@ const Image = styled.img`
   margin: 15px 15px 15px 15px;
   float: left;
 `;
+
 const Text = styled.div`
   float: left;
   padding-top: 7px;
   padding-right: 15px;
 `;
+
 const Summoner = styled.h3`
   color: white;
 `;
+
 const Champion = styled.p`
   text-align: left;
   margin-top:-10px;
@@ -34,6 +42,8 @@ class Teammate extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
+
+  
 
   handleClick() {
     this.props.changeExpansion(this.props.summonerName);
@@ -71,7 +81,7 @@ class Teammate extends Component {
     }
 
     return (
-        <Card onClick={this.handleClick}>
+        <Card onClick={this.handleClick} team={this.props.team} side={this.props.side}>
           <Image src={championImage} alt={this.props.championName} />
           <Text>
             <Summoner>{this.props.summonerName}</Summoner>

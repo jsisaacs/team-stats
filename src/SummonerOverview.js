@@ -64,47 +64,71 @@ class SummonerOverview extends Component {
     });
   }
 
+  getColor(teamCode) {
+    if (teamCode === 100) {
+      return "salmon";
+    } else {
+      return "cornflowerblue";
+    }
+  }
+
+  getSide(teamCode) {
+    if (teamCode === 100) {
+      return "left";
+    } else {
+      return "right";
+    }
+  }
+
   render() {
     return (
       <div>
-        <h1>Team 1</h1>
-        {this.state.participants.team1.map(teammate => {
-          const expanded = teammate.expanded;
-          if (!expanded) {
-            return <Teammate
-                    changeExpansion={input => this.changeExpansion(input)} 
-                    key={teammate.summonerId}
-                    summonerName={teammate.summonerName}
-                    championName={teammate.championName}
-                   /> 
-          } else {
-            return <ExpandedTeammate 
-                    key={teammate.summonerId}
-                    changeExpansion={input => this.changeExpansion(input)}
-                    summonerName={teammate.summonerName}
-                    championName={teammate.championName}
-                   />
-          }
-        })}
-        <h1>Team 2</h1>
-        {this.state.participants.team2.map(teammate => {
-          const expanded = teammate.expanded;
-          if (!expanded) {
-            return <Teammate
-                    key={teammate.summonerId}
-                    changeExpansion={input => this.changeExpansion(input)} 
-                    summonerName={teammate.summonerName}
-                    championName={teammate.championName}
-                   /> 
-          } else {
-            return <ExpandedTeammate 
-                    key={teammate.summonerId}
-                    changeExpansion={input => this.changeExpansion(input)}
-                    summonerName={teammate.summonerName}
-                    championName={teammate.championName}
-                   />
-          }
-        })}
+        <div>
+          <h1>Team 1</h1>
+          {this.state.participants.team1.map(teammate => {
+            const expanded = teammate.expanded;
+            if (!expanded) {
+              return <Teammate
+                      changeExpansion={input => this.changeExpansion(input)} 
+                      key={teammate.summonerId}
+                      team={this.getColor(teammate.team)}
+                      side={this.getSide(teammate.team)}
+                      summonerName={teammate.summonerName}
+                      championName={teammate.championName}
+                    /> 
+            } else {
+              return <ExpandedTeammate 
+                      key={teammate.summonerId}
+                      changeExpansion={input => this.changeExpansion(input)}
+                      summonerName={teammate.summonerName}
+                      championName={teammate.championName}
+                    />
+            }
+          })}
+        </div>
+        <div>
+          <h1>Team 2</h1>
+          {this.state.participants.team2.map(teammate => {
+            const expanded = teammate.expanded;
+            if (!expanded) {
+              return <Teammate
+                      key={teammate.summonerId}
+                      changeExpansion={input => this.changeExpansion(input)} 
+                      team={this.getColor(teammate.team)}
+                      side={this.getSide(teammate.team)}
+                      summonerName={teammate.summonerName}
+                      championName={teammate.championName}
+                    /> 
+            } else {
+              return <ExpandedTeammate 
+                      key={teammate.summonerId}
+                      changeExpansion={input => this.changeExpansion(input)}
+                      summonerName={teammate.summonerName}
+                      championName={teammate.championName}
+                    />
+            }
+          })}
+        </div>
       </div>
     )
   }
