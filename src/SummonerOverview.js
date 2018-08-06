@@ -83,6 +83,9 @@ class SummonerOverview extends Component {
         team2: team2
       }
     });
+
+    //if the state is expanded, and also if wins is equal to null,
+    //then call getChampionStatistics() and set the appropriate teammate's state
   }
 
   getColor(teamCode) {
