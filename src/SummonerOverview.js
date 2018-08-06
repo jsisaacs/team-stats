@@ -4,13 +4,24 @@ import Teammate from './Teammate';
 import rp from 'request-promise';
 import ExpandedTeammate from './ExpandedTeammate';
 
+const TeamName = styled.h1`
+  font-family: 'Rubik', sans-serif;
+  font-weight: bold;
+  font-size: 45px;
+  color: rgb(57, 59, 67);
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
 const ContainerOne = styled.div`
-  max-width: 400px;
+  max-width: 350px;
   float: left;
 `;
 
 const ContainerTwo = styled.div`
-  max-width: 400px;
+  max-width: 350px;
   float: right;
 `;
 
@@ -90,9 +101,25 @@ class SummonerOverview extends Component {
 
   getColor(teamCode) {
     if (teamCode === 100) {
-      return "salmon";
+      return "#f7d1d5";
     } else {
-      return "cornflowerblue";
+      return "#d1ddf7";
+    }
+  }
+
+  getOutlineColor(teamCode) {
+    if (teamCode === 100) {
+      return "#fe828d"
+    } else {
+      return "#82a1fe";
+    }
+  }
+
+  getFontColor(teamCode) {
+    if (teamCode === 100) {
+      return "#d8414f";
+    } else {
+      return "#4170d8";
     }
   }
 
@@ -116,7 +143,7 @@ class SummonerOverview extends Component {
     return (
       <div>
         <ContainerOne>
-          <h1>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</h1>
+          <TeamName>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</TeamName>
           {this.state.participants.team1.map(teammate => {
             const expanded = teammate.expanded;
             if (!expanded) {
@@ -125,6 +152,8 @@ class SummonerOverview extends Component {
                       key={teammate.summonerId}
                       team={this.getColor(teammate.team)}
                       side={this.getSide(teammate.team)}
+                      fontColor={this.getFontColor(teammate.team)}
+                      outlineColor={this.getOutlineColor(teammate.team)}
                       summonerName={teammate.summonerName}
                       championName={teammate.championName}
                     /> 
@@ -139,7 +168,7 @@ class SummonerOverview extends Component {
           })}
         </ContainerOne>
         <ContainerTwo>
-          <h1>{`${this.setTeamTitle(this.state.participants.team2[0].team)} Team`}</h1>
+          <TeamName>{`${this.setTeamTitle(this.state.participants.team2[0].team)} Team`}</TeamName>
           {this.state.participants.team2.map(teammate => {
             const expanded = teammate.expanded;
             if (!expanded) {
@@ -148,6 +177,8 @@ class SummonerOverview extends Component {
                       changeExpansion={input => this.changeExpansion(input)} 
                       team={this.getColor(teammate.team)}
                       side={this.getSide(teammate.team)}
+                      fontColor={this.getFontColor(teammate.team)}
+                      outlineColor={this.getOutlineColor(teammate.team)}
                       summonerName={teammate.summonerName}
                       championName={teammate.championName}
                     /> 

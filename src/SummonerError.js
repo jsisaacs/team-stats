@@ -13,6 +13,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.h1`
+  font-family: 'Rubik', sans-serif;
   font-style: italic;
   font-size: 50px;
   color: rgb(57, 59, 67);
@@ -20,23 +21,27 @@ const Header = styled.h1`
 `;
 
 const HeaderAccent = styled.span`
+  font-family: 'Rubik', sans-serif;
   font-style: italic;
   font-size: 50px;
   color: rgb(82, 231, 185);
 `;
 
 const SubHeader = styled.h3`
+  font-family: 'Rubik', sans-serif;
   font-size: 20px;
   color: rgb(57, 59, 67);
 `;
 
 const ListHeader = styled.h4`
+  font-family: 'Rubik', sans-serif;
   font-size: 20px;
   font-weight: 400;
   color: rgb(57, 59, 67);
 `;
 
 const ListHeaderAccent = styled.span`
+  font-family: 'Rubik', sans-serif;
   font-size: 20px;
   font-weight: 400;
   font-style: italic;
@@ -51,6 +56,7 @@ const OrderedList = styled.ol`
 
 const ListItem = styled.li`
   //font-style: italic;
+  font-family: 'Rubik', sans-serif;
   font-weight: bold;
   color: rgb(57, 59, 67);
   padding-top: 3.5px;

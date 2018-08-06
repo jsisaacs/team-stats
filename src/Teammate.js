@@ -3,19 +3,40 @@ import styled from 'styled-components';
 
 const Card = styled.div.attrs({
   background: props => props.team,
-  float: props => props.side
+  float: props => props.side,
+  outline: props => props.outline
 })`
   background: ${props => props.background};
   float: ${props => props.float};
+  border-color: ${props => props.outline};
+  border-width: 2px;
+  border-style: solid;
   border-radius: 4px; 
   width: 325px;
   height: 100px;
   margin: 15px;
-  box-shadow: 0 0 20px grey;
+
+  &:hover {
+    box-shadow: 0px 0px 20px lightgrey;
+    z-index: 2;
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1.1);
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1.1);   
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1.1);
+    transition: all 125ms ease-in;
+    transform: scale(1.05);
+  }
 `;
 
-const Image = styled.img`
+const Image = styled.img.attrs({
+  imageoutlinecolor: props => props.outline
+})`
+  border-color: ${props => props.imageoutlinecolor};
   border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
   width: 70px;
   height: auto;
   margin: 15px 15px 15px 15px;
@@ -24,20 +45,28 @@ const Image = styled.img`
 
 const Text = styled.div`
   float: left;
-  padding-top: 7px;
+  padding-top: 0px;
   padding-right: 15px;
 `;
 
-const Summoner = styled.h3`
-  color: white;
-  font-family: 'Josefin Sans', sans-serif;
+const Summoner = styled.h3.attrs({
+  color: props => props.fontColor
+})`
+  color: ${props => props.color};
+  font-family: 'Rubik', sans-serif;
+  font-weight: bold;
+  font-size: 22.5px;
 `;
 
-const Champion = styled.p`
+const Champion = styled.p.attrs({
+  color: props => props.fontColor
+})`
   text-align: left;
   margin-top:-10px;
-  color: white;
-  font-family: 'Asap', sans-serif;
+  color: ${props => props.color};
+  font-family: 'Rubik', sans-serif;
+  font-weight: light;
+  font-size: 17.5px;
 `;
 
 class Teammate extends Component {
@@ -82,11 +111,11 @@ class Teammate extends Component {
     }
 
     return (
-        <Card onClick={this.handleClick} team={this.props.team} side={this.props.side}>
-          <Image src={championImage} alt={this.props.championName} />
+        <Card onClick={this.handleClick} team={this.props.team} side={this.props.side} outline={this.props.outlineColor}>
+          <Image src={championImage} alt={this.props.championName} outline={this.props.outlineColor}/>
           <Text>
-            <Summoner>{this.props.summonerName}</Summoner>
-            <Champion>{this.props.championName}</Champion>
+            <Summoner fontColor={this.props.fontColor}>{this.props.summonerName}</Summoner>
+            <Champion fontColor={this.props.fontColor}>{this.props.championName}</Champion>
           </Text>
         </Card>
     )
