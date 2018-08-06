@@ -21,6 +21,7 @@ class App extends Component {
         team2: []
       }
     },
+    initialLoading: true
   }
   
   formSubmit = (input) => {
@@ -46,13 +47,16 @@ class App extends Component {
         participants: {
           team1: [],
           team2: []
-        }
+        },
+        initialLoading: false
       });
     }
   }
   
   render() {
     const inGame = this.state.gameStatus;
+    const initialLoading = this.state.initialLoading;
+
     return (
       <Wrapper>
         <Form formSubmit={form => this.formSubmit(form)} />
@@ -63,9 +67,12 @@ class App extends Component {
                 region={this.state.form.formRegionInput}
                 participants={this.state.participants}
               />
-            : <SummonerError 
-                name={this.state.form.formSummonerNameInput}
-              />
+            : (initialLoading
+                ? null
+                : <SummonerError 
+                    name={this.state.form.formSummonerNameInput}
+                  />
+            )
         }
       </Wrapper>
     )
