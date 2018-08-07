@@ -3,6 +3,7 @@ import Form from './Form';
 import SummonerOverview from './SummonerOverview';
 import SummonerError from './SummonerError';
 import styled from 'styled-components';
+import MediaQuery from 'react-responsive';
 
 const Wrapper = styled.div`
   // margin: 0 auto;
@@ -59,21 +60,26 @@ class App extends Component {
 
     return (
       <Wrapper>
-        <Form formSubmit={form => this.formSubmit(form)} />
-        {
-          inGame 
-            ? <SummonerOverview 
-                name={this.state.form.formSummonerNameInput}
-                region={this.state.form.formRegionInput}
-                participants={this.state.participants}
-              />
-            : (initialLoading
-                ? null
-                : <SummonerError 
-                    name={this.state.form.formSummonerNameInput}
-                  />
-            )
-        }
+        <MediaQuery minWidth={745}>
+          <Form formSubmit={form => this.formSubmit(form)} />
+          {
+            inGame 
+              ? <SummonerOverview 
+                  name={this.state.form.formSummonerNameInput}
+                  region={this.state.form.formRegionInput}
+                  participants={this.state.participants}
+                />
+              : (initialLoading
+                  ? null
+                  : <SummonerError 
+                      name={this.state.form.formSummonerNameInput}
+                    />
+              )
+          }
+        </MediaQuery>
+        <MediaQuery maxWidth={744}>
+          <div>You are a tablet or mobile phone</div>
+        </MediaQuery>
       </Wrapper>
     )
   }

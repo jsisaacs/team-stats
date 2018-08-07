@@ -50,9 +50,7 @@ const ListHeaderAccent = styled.span`
   border-bottom: 5px solid rgb(82, 231, 185);
 `;
 
-const OrderedList = styled.ol`
-
-`;
+const OrderedList = styled.ol``;
 
 const ListItem = styled.li`
   //font-style: italic;
@@ -73,7 +71,7 @@ class SummonerError extends Component {
         <ListHeader>Here are some <ListHeaderAccent>likely causes:</ListHeaderAccent></ListHeader>
         <OrderedList>
           <ListItem>Incorrect summoner name</ListItem>
-          <ListItem>The summoner is playing, but not in a ranked 5v5</ListItem>
+          <ListItem>Not playing a ranked 5v5 match</ListItem>
           <ListItem>The summoner isn't currently in game</ListItem>
           <ListItem>Selected the wrong server</ListItem>
         </OrderedList>

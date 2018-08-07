@@ -2,18 +2,83 @@ import React, { Component } from 'react';
 import rp from 'request-promise';
 import styled from 'styled-components'; 
 
-const Wrapper = styled.div`
-  display: block;
-  text-align: center;
+const FormWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  background: lightblue;
+  height: 300px;
+  align-items: center;
 `;
-const StyledForm = styled.form`
 
+const CompanyName = styled.h1`
+  font-family: 'Rubik', sans-serif;
+  letter-spacing: .06rem;
+  color: rgb(57, 59, 67);
 `;
+
+const StyledForm = styled.form``;
+
+const ServerDropdown = styled.select`
+  height: 60px;
+  outline: none;
+  border-style: none;
+  border-radius: 4px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: .05rem;
+  background: white;
+  //color: rgb(57, 59, 67);
+  color: rgb(117, 117, 117);
+`;
+
 const SummonerInput = styled.input`
+  padding: 12px 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  box-sizing: border-box;
+  border-style: solid;
+  border-radius: 4px;
+  border-width: 2px;
+  border-color: rgba(255,255,255,0);
+  height: 60px;
+  width: 325px;
+  outline: none; 
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+  color: rgb(57, 59, 67);
 
+  -webkit-transition: 0.25s;
+  transition: 0.25s;
+
+  &:focus {
+    border: 2px solid rgb(57, 59, 67);
+  }
 `;
-const SubmitButton = styled.input`
 
+const SubmitButton = styled.input`
+  background: rgb(57, 59, 67);
+  border-style: none;
+  border-radius: 4px; 
+  width: 210px;
+  height: 60px;
+  outline: none;
+  font-family: 'Rubik', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: .05rem;
+  color: white;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  -webkit-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+
+  &:hover {
+    background: rgb(32, 35, 38);
+  }
 `;
 
 class Form extends Component {
@@ -84,35 +149,38 @@ class Form extends Component {
   
   render() {
     return (
-      <Wrapper>
-        <StyledForm onSubmit={this.handleSubmit}>
-            <select 
-              value={this.state.formRegionInput}
-              onChange={this.handleRegionChange}
-              required
-            >
-              <option value="na">North America</option>
-              <option value="eune">Europe</option>
-              <option value="kr">Korea</option>
-              <option value="euw">Europe West</option>
-              <option value="br">Brazil</option>
-              <option value="lan">Latin America North</option>
-              <option value="las">Latin America South</option> 
-              <option value="oce">Oceania</option>
-              <option value="ru">Russia</option>
-              <option value="tr">Turkey</option>
-              <option value="jp">Japan</option>
-            </select>
-            <SummonerInput 
-              type="text"
-              placeholder="Provide a summoner name"
-              value={this.state.formSummonerNameInput}
-              onChange={this.handleTextChange}
-              required
-            />
-          <SubmitButton type="submit" value="Submit" />
-        </StyledForm>
-      </Wrapper>
+      <div>
+        <CompanyName>Prelytics</CompanyName>
+        <FormWrapper>
+          <StyledForm onSubmit={this.handleSubmit}>
+              <ServerDropdown 
+                value={this.state.formRegionInput}
+                onChange={this.handleRegionChange}
+                required
+              >
+                <option value="na">NA</option>
+                <option value="eune">EUNE</option>
+                <option value="kr">KR</option>
+                <option value="euw">EUW</option>
+                <option value="br">BR</option>
+                <option value="lan">LAN</option>
+                <option value="las">LAS</option> 
+                <option value="oce">OCE</option>
+                <option value="ru">RU</option>
+                <option value="tr">TR</option>
+                <option value="jp">JP</option>
+              </ServerDropdown>
+              <SummonerInput 
+                type="text"
+                placeholder="Provide a summoner name"
+                value={this.state.formSummonerNameInput}
+                onChange={this.handleTextChange}
+                required
+              />
+            <SubmitButton type="submit" value="Get Current Match" />
+          </StyledForm>
+        </FormWrapper>
+      </div>
     )
   }
 }

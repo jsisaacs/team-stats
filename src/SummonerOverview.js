@@ -19,11 +19,13 @@ const TeamName = styled.h1`
 const ContainerOne = styled.div`
   max-width: 350px;
   float: left;
+  padding-left: 15px;
 `;
 
 const ContainerTwo = styled.div`
   max-width: 350px;
   float: right;
+  padding-right: 15px;
 `;
 
 class SummonerOverview extends Component {
@@ -143,7 +145,7 @@ class SummonerOverview extends Component {
   render() {
     return (
       <div>
-        <MediaQuery minWidth={720}>
+        <MediaQuery minWidth={745}>
           <ContainerOne>
             <TeamName>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</TeamName>
             {this.state.participants.team1.map(teammate => {
@@ -195,7 +197,7 @@ class SummonerOverview extends Component {
             })}
           </ContainerTwo>
         </MediaQuery>
-        <MediaQuery maxWidth={720}>
+        <MediaQuery maxWidth={744}>
           <div>You are a tablet or mobile phone</div>
         </MediaQuery>
       </div>

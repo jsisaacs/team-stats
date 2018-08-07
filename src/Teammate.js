@@ -26,7 +26,7 @@ const Card = styled.div.attrs({
     -moz-transition: all 200ms ease-in;
     -moz-transform: scale(1.1);
     transition: all 125ms ease-in;
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 `;
 
