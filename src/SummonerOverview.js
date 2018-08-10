@@ -42,8 +42,8 @@ class SummonerOverview extends Component {
     console.log(this.state);
   }
 
-  async getSummonerInfo(region, summonerName) {
-    return await rp({
+  getSummonerInfo(region, summonerName) {
+    return rp({
       uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
@@ -52,14 +52,24 @@ class SummonerOverview extends Component {
     });
   }
 
-  async getChampionStatistics(region, summonerName, championName) {
-    return await rp({
+  getChampionStatistics(region, summonerName, championName) {
+    return rp({
       uri: `http://localhost:12344/champion-statistics/${region}/${summonerName}/${championName}`,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
       },
       json: true
     });
+  }
+
+  getBadges(region, summonerName, championName) {
+    return rp({
+      uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+      },
+      json: true
+    })
   }
 
   async componentDidUpdate(prevProps) {

@@ -45,16 +45,6 @@ class ExpandedTeammate extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentDidMount() {
-    //document.body.style.webkitFilter = 'blur(5px)';
-    //document.body.style.filter = 'blur(5px)';
-  }
-
-  componentWillUnmount() {
-    // document.body.style.webkitFilter = '';
-    // document.body.style.filter = '';
-  }
-
   handleClick() {
     this.props.changeExpansion(this.props.summonerName);
   }
