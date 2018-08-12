@@ -72,6 +72,10 @@ class SummonerOverview extends Component {
     })
   }
 
+  getChampionHistory() {
+    //TODO
+  }
+
   async componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       this.setState({
@@ -83,6 +87,36 @@ class SummonerOverview extends Component {
         }
       })
     }
+  }
+
+  async loadExpansionData(summonerName) {
+    const team1 = this.state.participants.team1.slice(0);
+    const team2 = this.state.participants.team2.slice(0);
+
+    for (const teammate of team1) {
+      if (summonerName === teammate.summonerName && teammate.expanded === true) {
+        if (teammate.championStatistics.cs === null) {
+          const [info, championStatistics, badges] = await Promise.all([
+            this.getSummonerInfo(this.state.region, teammate.summonerName),
+            this.getChampionStatistics(this.state.region, teammate.summonerName, teammate.championName),
+            this.getBadges(this.state.region, teammate.summonerName, teammate.championName)
+          ]);
+
+          console.log(info);
+          console.log(championStatistics);
+          console.log(badges);
+        } else {
+          //TODO
+        }
+      }
+    }
+
+    team2.forEach(teammate => {
+      if (summonerName === teammate.summonerName && teammate.expanded === true) {
+        
+      }
+    });
+
   }
 
   changeExpansion(summonerName) {
@@ -108,8 +142,7 @@ class SummonerOverview extends Component {
       }
     });
 
-    //if the state is expanded, and also if wins is equal to null,
-    //then call getChampionStatistics() and set the appropriate teammate's state
+    this.loadExpansionData(summonerName);
   }
 
   getColor(teamCode) {
