@@ -56,6 +56,7 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
       const summonerStats = [];
       
       const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
+      const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
 
       scrape = promise => {
         Promise.resolve(promise).then($ => {
@@ -92,8 +93,47 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
           return summonerStat.championName === req.params.championName;
         });
         filteredOutput[0].championId = getChampionId(filteredOutput[0].championName);
+        
+        const response = filteredOutput[0];
+        
+        response.badges = {
+          hotStreak: false,
+          mastery6: false,
+          mastery7: false,
+          newbie: false,
+          fiftyGames: false,
+          veteran: false,
+          sixtyPlusWinrate: false,
+          highDamage: false,
+          goldMachine: false,
+          terrible: false,
+          strongKDA: false,
+          excellentKDA: false,
+          inPromos: false
+        }
+        response.championRating = 85;
 
-        res.json(filteredOutput[0]);
+        //rotate through leaguePosition and get ranked solo
+        let leagueIndex = 0;
+        for (let i = 0; i < leaguePosition.length; i++) {
+          if (leaguePosition[i].queueType === 'RANKED_SOLO_5x5') {
+            leagueIndex = i;
+          }
+        }
+
+        const { leaguePoints, hotStreak, tier, rank } = leaguePosition[leagueIndex];
+
+        //MASTERY: TODO
+        const gameNumber = response.wins + response.losses;
+        const winRate = Number(Number((response.wins / gameNumber) * 100).toFixed(2));
+        const gold = response.gold;
+        const damage = response.averageDamageDealt;
+        const killsBadgeData = response.kda.kills;
+        const deathsBadgeData = response.kda.deaths;
+        const assistsBadgeData = response.kda.assists;
+        const kdaRatio = (killsBadgeData + assistsBadgeData) / deathsBadgeData;
+
+        res.json(response);
         console.log('200: Success accessing /champion-statistics.');
         })
         .catch(() => {
