@@ -140,8 +140,6 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
         const assistsBadgeData = response.kda.assists;
         const kdaRatio = (killsBadgeData + assistsBadgeData) / deathsBadgeData;
 
-        console.log(gameNumber);
-
         response.badges.hotStreak = hotStreak;
         response.tier = tier;
         response.rank = rank;

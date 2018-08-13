@@ -42,16 +42,6 @@ class SummonerOverview extends Component {
     console.log(this.state);
   }
 
-  getSummonerInfo(region, summonerName) {
-    return rp({
-      uri: `http://localhost:12344/summoner-info/${region}/${summonerName}`,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-      },
-      json: true
-    });
-  }
-
   getChampionStatistics(region, summonerName, championName) {
     return rp({
       uri: `http://localhost:12344/champion-statistics/${region}/${summonerName}/${championName}`,
@@ -60,16 +50,6 @@ class SummonerOverview extends Component {
       },
       json: true
     });
-  }
-
-  getBadges(region, summonerName, championName) {
-    return rp({
-      uri: `http://localhost:12344/badges/${region}/${summonerName}/${championName}`,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-      },
-      json: true
-    })
   }
 
   getChampionHistory() {
@@ -96,15 +76,9 @@ class SummonerOverview extends Component {
     for (const teammate of team1) {
       if (summonerName === teammate.summonerName && teammate.expanded === true) {
         if (teammate.championStatistics.cs === null) {
-          const [info, championStatistics, badges] = await Promise.all([
-            this.getSummonerInfo(this.state.region, teammate.summonerName),
-            this.getChampionStatistics(this.state.region, teammate.summonerName, teammate.championName),
-            this.getBadges(this.state.region, teammate.summonerName, teammate.championName)
-          ]);
+          const championStatistics = await this.getChampionStatistics(this.state.region, summonerName, teammate.championName);
 
-          console.log(info);
-          console.log(championStatistics);
-          console.log(badges);
+          console.log(championStatistics)
         } else {
           //TODO
         }

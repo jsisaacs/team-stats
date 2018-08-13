@@ -49,6 +49,9 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
             championName: getChampionName(String(participant.championId)),
             expanded: false,
             championStatistics: {
+              championRank: null,
+              championName: null,
+              championId: null,
               wins: null,
               losses: null,
               kda: {
@@ -65,7 +68,26 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
               doubleKill: null,
               tripleKill: null,
               quadraKill: null,
-              pentaKill: null
+              pentaKill: null,
+              badges: {
+                hotStreak: null,
+                mastery6: null,
+                mastery7: null,
+                newbie: null,
+                fiftyGames: null,
+                veteran: null,
+                sixtyPlusWinrate: null,
+                highDamage: null,
+                goldMachine: null,
+                safePlayer: false,
+                terrible: null,
+                strongKDA: null,
+                excellentKDA: null,
+                inPromos: null
+              },
+              championRating: null,
+              tier: null,
+              rank: null             
             }
           }
 
