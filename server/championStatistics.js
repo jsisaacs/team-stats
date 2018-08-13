@@ -111,6 +111,7 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
           sixtyPlusWinrate: false,
           highDamage: false,
           goldMachine: false,
+          safePlayer: false,
           terrible: false,
           strongKDA: false,
           excellentKDA: false,
@@ -133,10 +134,69 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
         const winRate = Number(Number((response.wins / gameNumber) * 100).toFixed(2));
         const gold = response.gold;
         const damage = response.averageDamageDealt;
+        const damageTaken = response.averageDamageTaken;
         const killsBadgeData = response.kda.kills;
         const deathsBadgeData = response.kda.deaths;
         const assistsBadgeData = response.kda.assists;
         const kdaRatio = (killsBadgeData + assistsBadgeData) / deathsBadgeData;
+
+        console.log(gameNumber);
+
+        response.badges.hotStreak = hotStreak;
+        response.tier = tier;
+        response.rank = rank;
+
+        if (championLevel === 6) {
+          response.badges.mastery6 = true;
+        }
+
+        if (championLevel === 7) {
+          response.badges.mastery7 = true;
+        }
+
+        if (gameNumber <= 15) {
+          response.badges.newbie = true;
+        }
+
+        if (gameNumber >= 50 && gameNumber < 100) {
+          response.badges.fiftyGames = true;
+        }
+
+        if (gameNumber >= 100) {
+          response.badges.veteran = true;
+        }
+
+        if (winRate >= 60) {
+          response.badges.sixtyPlusWinrate = true;
+        }
+
+        if (winRate <= 42 && gameNumber >= 15) {
+          response.badges.terrible = true;
+        }
+
+        if (kdaRatio >= 3 && kdaRatio < 4) {
+          response.badges.strongKDA = true;
+        }
+
+        if (kdaRatio >= 4) {
+          response.badges.excellentKDA = true;
+        }
+
+        if (gold > 10000) {
+          response.badges.goldMachine = true;
+        }
+
+        if (damage >= 100000) {
+          response.badges.highDamage = true;
+        }
+
+        if (damageTaken <= 14000) {
+          response.badges.safePlayer = true;
+        }
+
+        if (leaguePoints === 100) {
+          response.badges.inPromos = true;
+        }
 
         res.json(response);
         console.log('200: Success accessing /champion-statistics.');
