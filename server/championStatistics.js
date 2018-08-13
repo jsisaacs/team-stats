@@ -56,8 +56,12 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
       const summonerStats = [];
       
       const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
+      
       const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
 
+      const champId = getChampionId(req.params.championName);
+      const { championLevel } = await kayn.ChampionMastery.get(id)(champId).region(req.params.region);
+    
       scrape = promise => {
         Promise.resolve(promise).then($ => {
           $('tr').each(function (i, elem) {
@@ -67,6 +71,7 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
               championName: champName,
               championId: undefined,
               championImage: undefined,
+              championMastery: championLevel,
               wins: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(1).text().slice(0, -1).replace(/,/g, '')),
               losses: Number($('tr').not($('tr')[0]).eq(i).children().eq(3).children().first().children().first().children().eq(3).text().slice(0, -1).replace(/,/g, '')),
               kda: {
