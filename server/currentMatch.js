@@ -48,6 +48,7 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
             championId: participant.championId,
             championName: getChampionName(String(participant.championId)),
             expanded: false,
+            isLoaded: false,
             championStatistics: {
               championRank: null,
               championName: null,

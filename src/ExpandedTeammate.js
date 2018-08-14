@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Statistics from './Statistics';
 
 const Modal = styled.div`
   display: block;
@@ -54,7 +55,8 @@ class ExpandedTeammate extends Component {
       <Modal className="modal">
         <Content>
           <CloseButton onClick={this.handleClick}>&times;</CloseButton>
-          <p>This is some text</p>
+          <Statistics/>
+          <p>{this.props.championStatistics.cs}</p>
         </Content>
       </Modal>
     )

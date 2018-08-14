@@ -127,9 +127,13 @@ class SummonerOverview extends Component {
             statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
             statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
   
+            //very hacky way of setting state, as I can't figure out how to access a particular array element
+            //and use this.setState without it creating a new field
+            this.state.participants.team1[team1Index].isLoaded = true;
             this.state = stateCopy;
-  
-            console.log(this.state);
+
+            //eventually this will need to be refactored into this.setState
+            this.forceUpdate();
           } else {
             console.log("ALREADY EXPANDED BEFORE")
           }
@@ -189,8 +193,16 @@ class SummonerOverview extends Component {
             statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
             statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
             statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
-  
+            
+            //very hacky way of setting state, as I can't figure out how to access a particular array element
+            //and use this.setState without it creating a new field
+            this.state.participants.team2[team2Index].isLoaded = true;
             this.state = stateCopy;
+
+            //eventually this will need to be refactored into this.setState
+            this.forceUpdate();
+
+            console.log(this.state);
           } else {
             console.log("ALREADY EXPANDED BEFORE")
           }
@@ -276,24 +288,33 @@ class SummonerOverview extends Component {
             <TeamName>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</TeamName>
             {this.state.participants.team1.map(teammate => {
               const expanded = teammate.expanded;
+              const isLoaded = teammate.isLoaded;
               if (!expanded) {
                 return <Teammate
                         changeExpansion={input => this.changeExpansion(input)} 
                         key={teammate.summonerId}
+                        summonerName={teammate.summonerName}
+                        championName={teammate.championName}
                         team={this.getColor(teammate.team)}
                         side={this.getSide(teammate.team)}
                         fontColor={this.getFontColor(teammate.team)}
                         outlineColor={this.getOutlineColor(teammate.team)}
-                        summonerName={teammate.summonerName}
-                        championName={teammate.championName}
                       /> 
               } else {
-                return <ExpandedTeammate 
-                        key={teammate.summonerId}
-                        changeExpansion={input => this.changeExpansion(input)}
-                        summonerName={teammate.summonerName}
-                        championName={teammate.championName}
-                      />
+                if (isLoaded) {
+                  return <ExpandedTeammate 
+                  key={teammate.summonerId}
+                  changeExpansion={input => this.changeExpansion(input)}
+                  summonerName={teammate.summonerName}
+                  summonerId={teammate.summonerId}
+                  championName={teammate.championName}
+                  championId={teammate.championId}
+                  championStatistics={teammate.championStatistics}
+                  team={teammate.team}
+                />
+                } else {
+                  return <p>Loading...</p>
+                }
               }
             })}
           </ContainerOne>
@@ -301,24 +322,33 @@ class SummonerOverview extends Component {
             <TeamName>{`${this.setTeamTitle(this.state.participants.team2[0].team)} Team`}</TeamName>
             {this.state.participants.team2.map(teammate => {
               const expanded = teammate.expanded;
+              const isLoaded = teammate.isLoaded;
               if (!expanded) {
                 return <Teammate
                         key={teammate.summonerId}
                         changeExpansion={input => this.changeExpansion(input)} 
+                        summonerName={teammate.summonerName}
+                        championName={teammate.championName}
                         team={this.getColor(teammate.team)}
                         side={this.getSide(teammate.team)}
                         fontColor={this.getFontColor(teammate.team)}
                         outlineColor={this.getOutlineColor(teammate.team)}
-                        summonerName={teammate.summonerName}
-                        championName={teammate.championName}
                       /> 
               } else {
-                return <ExpandedTeammate 
-                        key={teammate.summonerId}
-                        changeExpansion={input => this.changeExpansion(input)}
-                        summonerName={teammate.summonerName}
-                        championName={teammate.championName}
-                      />
+                if (isLoaded) {
+                  return <ExpandedTeammate 
+                          key={teammate.summonerId}
+                          changeExpansion={input => this.changeExpansion(input)}
+                          summonerName={teammate.summonerName}
+                          summonerId={teammate.summonerId}
+                          championName={teammate.championName}
+                          championId={teammate.championId}
+                          championStatistics={teammate.championStatistics}
+                          team={teammate.team}
+                        />
+                } else {
+                  return <p>Loading...</p>
+                }
               }
             })}
           </ContainerTwo>
