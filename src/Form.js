@@ -110,31 +110,35 @@ class Form extends Component {
   }
 
   async handleSubmit(event) {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    const region = this.state.formRegionInput;
-    const summonerName = this.state.formSummonerNameInput;
-    
-    const game = await this.loadGame(region, summonerName);
-
-    if (game.participants !== undefined) {
+      const region = this.state.formRegionInput;
+      const summonerName = this.state.formSummonerNameInput;
+      
+      const game = await this.loadGame(region, summonerName);
+  
+      if (game.participants !== undefined) {
+        this.setState({
+          gameStatus: true,
+          participants: game.participants
+        })
+      } else {
+        this.setState({
+          gameStatus: false,
+          participants: null
+        })
+      }  
+      this.props.formSubmit(this.state);
+      
       this.setState({
-        gameStatus: true,
-        participants: game.participants
-      })
-    } else {
-      this.setState({
-        gameStatus: false,
-        participants: null
-      })
-    }  
-    this.props.formSubmit(this.state);
-    
-    this.setState({
-      formSummonerNameInput: '',
-      formRegionInput: 'na',
-      gameStatus: false
-    });
+        formSummonerNameInput: '',
+        formRegionInput: 'na',
+        gameStatus: false
+      });
+    } catch (error) {
+      console.log("Form submission error.");
+    }
   }
 
   async loadGame(region, summonerName) {

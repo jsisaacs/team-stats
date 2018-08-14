@@ -70,133 +70,136 @@ class SummonerOverview extends Component {
   }
 
   async loadExpansionData(summonerName) {
-    const team1 = this.state.participants.team1.slice(0);
-    const team2 = this.state.participants.team2.slice(0);
-
-    let team1Index = 0;
-    for (const teammate of team1) {
-      if (summonerName === teammate.summonerName && teammate.expanded === true) {
-        if (teammate.championStatistics.cs === null) {
-          const championStatistics = await this.getChampionStatistics(this.state.region, summonerName, teammate.championName);
-
-          //copy this.state
-          //loop thru team1 until you find teammate
-          //set championStatistics fields to the new data
-          //add the copied state to setState
-
-          const stateCopy = JSON.parse(JSON.stringify(this.state));
-          const statsCopy = stateCopy.participants.team1[team1Index];
-          
-          //Champion stats copying
-          statsCopy.championStatistics.averageDamageDealt = championStatistics.averageDamageDealt;
-          statsCopy.championStatistics.averageDamageTaken = championStatistics.averageDamageTaken;
-          statsCopy.championStatistics.championId = championStatistics.championId;
-          statsCopy.championStatistics.championName = championStatistics.championName;
-          statsCopy.championStatistics.championRank = championStatistics.championRank;
-          statsCopy.championStatistics.championRating = championStatistics.championRating;
-          statsCopy.championStatistics.cs = championStatistics.cs;
-          statsCopy.championStatistics.doubleKill = championStatistics.doubleKill;
-          statsCopy.championStatistics.gold = championStatistics.gold;
-          statsCopy.championStatistics.kda.assists = championStatistics.kda.assists;
-          statsCopy.championStatistics.kda.deaths = championStatistics.kda.deaths;
-          statsCopy.championStatistics.kda.kills = championStatistics.kda.kills;
-          statsCopy.championStatistics.losses = championStatistics.losses;
-          statsCopy.championStatistics.maxDeaths = championStatistics.maxDeaths;
-          statsCopy.championStatistics.maxKills = championStatistics.maxKills;
-          statsCopy.championStatistics.pentaKill = championStatistics.pentaKill;
-          statsCopy.championStatistics.quadraKill = championStatistics.quadraKill;
-          statsCopy.championStatistics.rank = championStatistics.rank;
-          statsCopy.championStatistics.tier = championStatistics.tier;
-          statsCopy.championStatistics.tripleKill = championStatistics.tripleKill;
-          statsCopy.championStatistics.wins = championStatistics.wins;
-          
-          //Badges copying
-          statsCopy.championStatistics.badges.excellentKDA = championStatistics.badges.excellentKDA;
-          statsCopy.championStatistics.badges.fiftyGames = championStatistics.badges.fiftyGames;
-          statsCopy.championStatistics.badges.goldMachine = championStatistics.badges.goldMachine;
-          statsCopy.championStatistics.badges.highDamage = championStatistics.badges.highDamage;
-          statsCopy.championStatistics.badges.hotStreak = championStatistics.badges.hotStreak;
-          statsCopy.championStatistics.badges.inPromos = championStatistics.badges.inPromos;
-          statsCopy.championStatistics.badges.mastery6 = championStatistics.badges.mastery6;
-          statsCopy.championStatistics.badges.mastery7 = championStatistics.badges.mastery7;
-          statsCopy.championStatistics.badges.newbie = championStatistics.badges.newbie;
-          statsCopy.championStatistics.badges.safePlayer = championStatistics.badges.safePlayer;
-          statsCopy.championStatistics.badges.sixtyPlusWinrate = championStatistics.badges.sixtyPlusWinrate;
-          statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
-          statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
-          statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
-
-          this.state = stateCopy;
-
-          console.log(this.state);
-        } else {
-          console.log("ALREADY EXPANDED BEFORE")
+    try {
+      const team1 = this.state.participants.team1.slice(0);
+      const team2 = this.state.participants.team2.slice(0);
+  
+      let team1Index = 0;
+      for (const teammate of team1) {
+        if (summonerName === teammate.summonerName && teammate.expanded === true) {
+          if (teammate.championStatistics.cs === null) {
+            const championStatistics = await this.getChampionStatistics(this.state.region, summonerName, teammate.championName);
+  
+            //copy this.state
+            //loop thru team1 until you find teammate
+            //set championStatistics fields to the new data
+            //add the copied state to setState
+  
+            const stateCopy = JSON.parse(JSON.stringify(this.state));
+            const statsCopy = stateCopy.participants.team1[team1Index];
+            
+            //Champion stats copying
+            statsCopy.championStatistics.averageDamageDealt = championStatistics.averageDamageDealt;
+            statsCopy.championStatistics.averageDamageTaken = championStatistics.averageDamageTaken;
+            statsCopy.championStatistics.championId = championStatistics.championId;
+            statsCopy.championStatistics.championName = championStatistics.championName;
+            statsCopy.championStatistics.championRank = championStatistics.championRank;
+            statsCopy.championStatistics.championRating = championStatistics.championRating;
+            statsCopy.championStatistics.cs = championStatistics.cs;
+            statsCopy.championStatistics.doubleKill = championStatistics.doubleKill;
+            statsCopy.championStatistics.gold = championStatistics.gold;
+            statsCopy.championStatistics.kda.assists = championStatistics.kda.assists;
+            statsCopy.championStatistics.kda.deaths = championStatistics.kda.deaths;
+            statsCopy.championStatistics.kda.kills = championStatistics.kda.kills;
+            statsCopy.championStatistics.losses = championStatistics.losses;
+            statsCopy.championStatistics.maxDeaths = championStatistics.maxDeaths;
+            statsCopy.championStatistics.maxKills = championStatistics.maxKills;
+            statsCopy.championStatistics.pentaKill = championStatistics.pentaKill;
+            statsCopy.championStatistics.quadraKill = championStatistics.quadraKill;
+            statsCopy.championStatistics.rank = championStatistics.rank;
+            statsCopy.championStatistics.tier = championStatistics.tier;
+            statsCopy.championStatistics.tripleKill = championStatistics.tripleKill;
+            statsCopy.championStatistics.wins = championStatistics.wins;
+            
+            //Badges copying
+            statsCopy.championStatistics.badges.excellentKDA = championStatistics.badges.excellentKDA;
+            statsCopy.championStatistics.badges.fiftyGames = championStatistics.badges.fiftyGames;
+            statsCopy.championStatistics.badges.goldMachine = championStatistics.badges.goldMachine;
+            statsCopy.championStatistics.badges.highDamage = championStatistics.badges.highDamage;
+            statsCopy.championStatistics.badges.hotStreak = championStatistics.badges.hotStreak;
+            statsCopy.championStatistics.badges.inPromos = championStatistics.badges.inPromos;
+            statsCopy.championStatistics.badges.mastery6 = championStatistics.badges.mastery6;
+            statsCopy.championStatistics.badges.mastery7 = championStatistics.badges.mastery7;
+            statsCopy.championStatistics.badges.newbie = championStatistics.badges.newbie;
+            statsCopy.championStatistics.badges.safePlayer = championStatistics.badges.safePlayer;
+            statsCopy.championStatistics.badges.sixtyPlusWinrate = championStatistics.badges.sixtyPlusWinrate;
+            statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
+            statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
+            statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
+  
+            this.state = stateCopy;
+  
+            console.log(this.state);
+          } else {
+            console.log("ALREADY EXPANDED BEFORE")
+          }
         }
+        team1Index = team1Index + 1;
       }
-      team1Index = team1Index + 1;
-    }
-
-    let team2Index = 0;
-    for (const teammate of team2) {
-      if (summonerName === teammate.summonerName && teammate.expanded === true) {
-        if (teammate.championStatistics.cs === null) {
-          const championStatistics = await this.getChampionStatistics(this.state.region, summonerName, teammate.championName);
-
-          //copy this.state
-          //loop thru team2 until you find teammate
-          //set championStatistics fields to the new data
-          //add the copied state to setState
-
-          const stateCopy = JSON.parse(JSON.stringify(this.state));
-          const statsCopy = stateCopy.participants.team2[team2Index];
-          
-          //Champion stats copying
-          statsCopy.championStatistics.averageDamageDealt = championStatistics.averageDamageDealt;
-          statsCopy.championStatistics.averageDamageTaken = championStatistics.averageDamageTaken;
-          statsCopy.championStatistics.championId = championStatistics.championId;
-          statsCopy.championStatistics.championName = championStatistics.championName;
-          statsCopy.championStatistics.championRank = championStatistics.championRank;
-          statsCopy.championStatistics.championRating = championStatistics.championRating;
-          statsCopy.championStatistics.cs = championStatistics.cs;
-          statsCopy.championStatistics.doubleKill = championStatistics.doubleKill;
-          statsCopy.championStatistics.gold = championStatistics.gold;
-          statsCopy.championStatistics.kda.assists = championStatistics.kda.assists;
-          statsCopy.championStatistics.kda.deaths = championStatistics.kda.deaths;
-          statsCopy.championStatistics.kda.kills = championStatistics.kda.kills;
-          statsCopy.championStatistics.losses = championStatistics.losses;
-          statsCopy.championStatistics.maxDeaths = championStatistics.maxDeaths;
-          statsCopy.championStatistics.maxKills = championStatistics.maxKills;
-          statsCopy.championStatistics.pentaKill = championStatistics.pentaKill;
-          statsCopy.championStatistics.quadraKill = championStatistics.quadraKill;
-          statsCopy.championStatistics.rank = championStatistics.rank;
-          statsCopy.championStatistics.tier = championStatistics.tier;
-          statsCopy.championStatistics.tripleKill = championStatistics.tripleKill;
-          statsCopy.championStatistics.wins = championStatistics.wins;
-          
-          //Badges copying
-          statsCopy.championStatistics.badges.excellentKDA = championStatistics.badges.excellentKDA;
-          statsCopy.championStatistics.badges.fiftyGames = championStatistics.badges.fiftyGames;
-          statsCopy.championStatistics.badges.goldMachine = championStatistics.badges.goldMachine;
-          statsCopy.championStatistics.badges.highDamage = championStatistics.badges.highDamage;
-          statsCopy.championStatistics.badges.hotStreak = championStatistics.badges.hotStreak;
-          statsCopy.championStatistics.badges.inPromos = championStatistics.badges.inPromos;
-          statsCopy.championStatistics.badges.mastery6 = championStatistics.badges.mastery6;
-          statsCopy.championStatistics.badges.mastery7 = championStatistics.badges.mastery7;
-          statsCopy.championStatistics.badges.newbie = championStatistics.badges.newbie;
-          statsCopy.championStatistics.badges.safePlayer = championStatistics.badges.safePlayer;
-          statsCopy.championStatistics.badges.sixtyPlusWinrate = championStatistics.badges.sixtyPlusWinrate;
-          statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
-          statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
-          statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
-
-          this.state = stateCopy;
-        } else {
-          console.log("ALREADY EXPANDED BEFORE")
+  
+      let team2Index = 0;
+      for (const teammate of team2) {
+        if (summonerName === teammate.summonerName && teammate.expanded === true) {
+          if (teammate.championStatistics.cs === null) {
+            const championStatistics = await this.getChampionStatistics(this.state.region, summonerName, teammate.championName);
+  
+            //copy this.state
+            //loop thru team2 until you find teammate
+            //set championStatistics fields to the new data
+            //add the copied state to setState
+  
+            const stateCopy = JSON.parse(JSON.stringify(this.state));
+            const statsCopy = stateCopy.participants.team2[team2Index];
+            
+            //Champion stats copying
+            statsCopy.championStatistics.averageDamageDealt = championStatistics.averageDamageDealt;
+            statsCopy.championStatistics.averageDamageTaken = championStatistics.averageDamageTaken;
+            statsCopy.championStatistics.championId = championStatistics.championId;
+            statsCopy.championStatistics.championName = championStatistics.championName;
+            statsCopy.championStatistics.championRank = championStatistics.championRank;
+            statsCopy.championStatistics.championRating = championStatistics.championRating;
+            statsCopy.championStatistics.cs = championStatistics.cs;
+            statsCopy.championStatistics.doubleKill = championStatistics.doubleKill;
+            statsCopy.championStatistics.gold = championStatistics.gold;
+            statsCopy.championStatistics.kda.assists = championStatistics.kda.assists;
+            statsCopy.championStatistics.kda.deaths = championStatistics.kda.deaths;
+            statsCopy.championStatistics.kda.kills = championStatistics.kda.kills;
+            statsCopy.championStatistics.losses = championStatistics.losses;
+            statsCopy.championStatistics.maxDeaths = championStatistics.maxDeaths;
+            statsCopy.championStatistics.maxKills = championStatistics.maxKills;
+            statsCopy.championStatistics.pentaKill = championStatistics.pentaKill;
+            statsCopy.championStatistics.quadraKill = championStatistics.quadraKill;
+            statsCopy.championStatistics.rank = championStatistics.rank;
+            statsCopy.championStatistics.tier = championStatistics.tier;
+            statsCopy.championStatistics.tripleKill = championStatistics.tripleKill;
+            statsCopy.championStatistics.wins = championStatistics.wins;
+            
+            //Badges copying
+            statsCopy.championStatistics.badges.excellentKDA = championStatistics.badges.excellentKDA;
+            statsCopy.championStatistics.badges.fiftyGames = championStatistics.badges.fiftyGames;
+            statsCopy.championStatistics.badges.goldMachine = championStatistics.badges.goldMachine;
+            statsCopy.championStatistics.badges.highDamage = championStatistics.badges.highDamage;
+            statsCopy.championStatistics.badges.hotStreak = championStatistics.badges.hotStreak;
+            statsCopy.championStatistics.badges.inPromos = championStatistics.badges.inPromos;
+            statsCopy.championStatistics.badges.mastery6 = championStatistics.badges.mastery6;
+            statsCopy.championStatistics.badges.mastery7 = championStatistics.badges.mastery7;
+            statsCopy.championStatistics.badges.newbie = championStatistics.badges.newbie;
+            statsCopy.championStatistics.badges.safePlayer = championStatistics.badges.safePlayer;
+            statsCopy.championStatistics.badges.sixtyPlusWinrate = championStatistics.badges.sixtyPlusWinrate;
+            statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
+            statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
+            statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
+  
+            this.state = stateCopy;
+          } else {
+            console.log("ALREADY EXPANDED BEFORE")
+          }
         }
-      }
-      team2Index = team2Index + 1;
+        team2Index = team2Index + 1;
+      }     
+    } catch (error) {
+      console.log("Error loading expansion data.");
     }
-
   }
 
   changeExpansion(summonerName) {
