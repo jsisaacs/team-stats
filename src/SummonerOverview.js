@@ -4,6 +4,7 @@ import rp from 'request-promise';
 import MediaQuery from 'react-responsive';
 import Teammate from './Teammate';
 import ExpandedTeammate from './ExpandedTeammate';
+import LoadingExpandedTeammate from './LoadingExpandedTeammate';
 
 const TeamName = styled.h1`
   font-family: 'Rubik', sans-serif;
@@ -313,7 +314,7 @@ class SummonerOverview extends Component {
                   team={teammate.team}
                 />
                 } else {
-                  return <p>Loading...</p>
+                  return <LoadingExpandedTeammate/>
                 }
               }
             })}
@@ -347,7 +348,7 @@ class SummonerOverview extends Component {
                           team={teammate.team}
                         />
                 } else {
-                  return <p>Loading...</p>
+                  return <LoadingExpandedTeammate/>
                 }
               }
             })}
