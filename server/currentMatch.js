@@ -79,7 +79,7 @@ router.get("/current-match/:region/:summonerName", (req, res) => {
                 sixtyPlusWinrate: null,
                 highDamage: null,
                 goldMachine: null,
-                safePlayer: false,
+                safePlayer: null,
                 terrible: null,
                 strongKDA: null,
                 excellentKDA: null,
