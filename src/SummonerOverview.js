@@ -127,6 +127,8 @@ class SummonerOverview extends Component {
           statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
 
           this.state = stateCopy;
+
+          console.log(this.state);
         } else {
           console.log("ALREADY EXPANDED BEFORE")
         }

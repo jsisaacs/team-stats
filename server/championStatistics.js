@@ -57,10 +57,16 @@ router.get("/champion-statistics/:region/:summonerName/:championName", (req, res
       
       const { id } = await kayn.Summoner.by.name(req.params.summonerName).region(req.params.region);
       
-      const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
+      //const leaguePosition = await kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region);
 
       const champId = getChampionId(req.params.championName);
-      const { championLevel } = await kayn.ChampionMastery.get(id)(champId).region(req.params.region);
+      //const { championLevel } = await kayn.ChampionMastery.get(id)(champId).region(req.params.region);
+
+      //concurrent requests
+      const [leaguePosition, championLevel] = await Promise.all([
+        kayn.LeaguePositions.by.summonerID(String(id)).region(req.params.region),
+        kayn.ChampionMastery.get(id)(champId).region(req.params.region)
+      ]);
     
       scrape = promise => {
         Promise.resolve(promise).then($ => {
