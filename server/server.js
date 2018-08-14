@@ -14,12 +14,6 @@ app.use(currentMatch);
 const championStatistics = require("./championStatistics");
 app.use(championStatistics);
 
-const championMastery = require("./championMastery");
-app.use(championMastery);
-
-const badges = require("./badges");
-app.use(badges);
-
 const championHistory = require("./championHistory");
 app.use(championHistory);
 
