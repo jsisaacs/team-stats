@@ -8,9 +8,7 @@ class LoadingExpandedTeammate extends Component {
   
   render() {
     return (
-        
-          <p>Loading...</p>
-        
+      <p>Loading...</p>
     )
   }
 }

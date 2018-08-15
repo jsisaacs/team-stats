@@ -46,6 +46,11 @@ class ExpandedTeammate extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    console.log("Props")
+    console.log(this.props);
+  }
+
   handleClick() {
     this.props.changeExpansion(this.props.summonerName);
   }
@@ -55,8 +60,8 @@ class ExpandedTeammate extends Component {
       <Modal className="modal">
         <Content>
           <CloseButton onClick={this.handleClick}>&times;</CloseButton>
+          
           <Statistics/>
-          <p>{this.props.championStatistics.cs}</p>
         </Content>
       </Modal>
     )

@@ -138,12 +138,18 @@ class Form extends Component {
       });
     } catch (error) {
       console.log("Form submission error.");
+      console.log(error);
     }
   }
 
   async loadGame(region, summonerName) {
+    //TODO: handle non-UTF8 characters
+
+    //const sanitizedSummonerName = String(summonerName);
+
     return await rp({
       uri: `http://localhost:12344/current-match/${region}/${summonerName}`,
+      //encoding: 'latin1',
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
       },

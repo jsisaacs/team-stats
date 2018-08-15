@@ -39,10 +39,6 @@ class SummonerOverview extends Component {
     }
   }
 
-  componentDidMount() {
-    console.log(this.state);
-  }
-
   getChampionStatistics(region, summonerName, championName) {
     return rp({
       uri: `http://localhost:12344/champion-statistics/${region}/${summonerName}/${championName}`,
@@ -90,6 +86,8 @@ class SummonerOverview extends Component {
             const statsCopy = stateCopy.participants.team1[team1Index];
             
             //Champion stats copying
+            console.log(championStatistics);
+
             statsCopy.championStatistics.averageDamageDealt = championStatistics.averageDamageDealt;
             statsCopy.championStatistics.averageDamageTaken = championStatistics.averageDamageTaken;
             statsCopy.championStatistics.championId = championStatistics.championId;
@@ -127,11 +125,13 @@ class SummonerOverview extends Component {
             statsCopy.championStatistics.badges.strongKDA = championStatistics.badges.strongKDA;
             statsCopy.championStatistics.badges.terrible = championStatistics.badges.terrible;
             statsCopy.championStatistics.badges.veteran = championStatistics.badges.veteran;
-  
+
             //very hacky way of setting state, as I can't figure out how to access a particular array element
             //and use this.setState without it creating a new field
-            this.state.participants.team1[team1Index].isLoaded = true;
-            this.state = stateCopy;
+            statsCopy.isLoaded = true;
+            
+            this.state.participants.team1[team1Index].isLoaded = statsCopy.isLoaded;
+            this.state.participants.team1[team1Index].championStatistics = statsCopy.championStatistics;
 
             //eventually this will need to be refactored into this.setState
             this.forceUpdate();
@@ -197,13 +197,13 @@ class SummonerOverview extends Component {
             
             //very hacky way of setting state, as I can't figure out how to access a particular array element
             //and use this.setState without it creating a new field
-            this.state.participants.team2[team2Index].isLoaded = true;
-            this.state = stateCopy;
+            statsCopy.isLoaded = true;
+            
+            this.state.participants.team2[team2Index].isLoaded = statsCopy.isLoaded;
+            this.state.participants.team2[team2Index].championStatistics = statsCopy.championStatistics;
 
             //eventually this will need to be refactored into this.setState
             this.forceUpdate();
-
-            console.log(this.state);
           } else {
             console.log("ALREADY EXPANDED BEFORE")
           }
@@ -282,12 +282,13 @@ class SummonerOverview extends Component {
   }
 
   render() {
+    const stateCopy = JSON.parse(JSON.stringify(this.state));
     return (
       <div>
         <MediaQuery minWidth={745}>
           <ContainerOne>
             <TeamName>{`${this.setTeamTitle(this.state.participants.team1[0].team)} Team`}</TeamName>
-            {this.state.participants.team1.map(teammate => {
+            {stateCopy.participants.team1.map(teammate => {
               const expanded = teammate.expanded;
               const isLoaded = teammate.isLoaded;
               if (!expanded) {
@@ -314,14 +315,16 @@ class SummonerOverview extends Component {
                   team={teammate.team}
                 />
                 } else {
-                  return <LoadingExpandedTeammate/>
+                  return <LoadingExpandedTeammate
+                          key={teammate.summonerId}
+                         />
                 }
               }
             })}
           </ContainerOne>
           <ContainerTwo>
             <TeamName>{`${this.setTeamTitle(this.state.participants.team2[0].team)} Team`}</TeamName>
-            {this.state.participants.team2.map(teammate => {
+            {stateCopy.participants.team2.map(teammate => {
               const expanded = teammate.expanded;
               const isLoaded = teammate.isLoaded;
               if (!expanded) {
@@ -348,7 +351,9 @@ class SummonerOverview extends Component {
                           team={teammate.team}
                         />
                 } else {
-                  return <LoadingExpandedTeammate/>
+                  return <LoadingExpandedTeammate
+                          key={teammate.summonerId}
+                         />
                 }
               }
             })}
